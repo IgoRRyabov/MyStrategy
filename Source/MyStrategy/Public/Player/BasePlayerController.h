@@ -60,5 +60,5 @@ private:
 	FVector MouseClickPosition;
 	void HitMouse();
 	void MoveUnitToPosition();
-	
+	void DecalDiactivated(ABaseUnitCharacter* Unit, bool isActive);
 };

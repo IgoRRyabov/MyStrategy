@@ -94,32 +94,26 @@ void ABasePlayerController::HitMouse()
 				auto const PlayerValue = Cast<ABaseUnitCharacter>(Hit.GetActor());
 				UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
 
-				if(!ActiveCharacter)
-				{
-					ActiveCharacter = Cast<ABaseUnitCharacter>(Hit.GetActor());
-					if(ActiveCharacter)
-					{
-						ActiveCharacter->VisibleDecalSet(true);
-						UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s"), *Hit.GetActor()->GetName());
-						return;
-					}
-				}
-				else
-				{
-					ActiveCharacter->VisibleDecalSet(false);
-					ActiveCharacter = Cast<ABaseUnitCharacter>(Hit.GetActor());
-					ActiveCharacter->VisibleDecalSet(true);
-					UE_LOG(LogTemp, Log, TEXT("Switch Player : %s"), *Hit.GetActor()->GetName());
-					return;
-				}
-
 				if(PlayerValue == ActiveCharacter)
 				{
 					ActiveCharacter->VisibleDecalSet(false);
 					ActiveCharacter = nullptr;
 					UE_LOG(LogTemp, Log, TEXT("Diactivate Unit : "));
-					
+					return;
 				}
+				
+				if(!ActiveCharacter)
+				{
+					ActiveCharacter = Cast<ABaseUnitCharacter>(Hit.GetActor());
+					DecalDiactivated(ActiveCharacter, true);
+					return;
+
+				}
+				DecalDiactivated(ActiveCharacter, false);
+				ActiveCharacter = Cast<ABaseUnitCharacter>(Hit.GetActor());
+				DecalDiactivated(ActiveCharacter, true);
+
+				
 			}
 			else
 			{
@@ -141,4 +135,10 @@ void ABasePlayerController::MoveUnitToPosition()
 	
 	ActiveCharacter->MoveOnPosition(Hit.Location);
 	UE_LOG(LogTemp, Log, TEXT("Unit Go to Position"));
+}
+
+void ABasePlayerController::DecalDiactivated(ABaseUnitCharacter* Unit, bool isActive)
+{
+	Unit->VisibleDecalSet(isActive);
+	UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s : %d"), *Unit->GetName(), isActive);
 }
