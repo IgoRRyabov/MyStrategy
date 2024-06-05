@@ -18,6 +18,7 @@ class MYSTRATEGY_API ABasePlayerController : public APlayerController
 public:
 	ABasePlayerController();
 
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "Effect Mouse Click"))
 	UParticleSystem* ParticleEmitter;
@@ -27,6 +28,12 @@ protected:
 	
 	UFUNCTION(BlueprintCallable)
 	FVector GetMouseClickPosition() {return MouseClickPosition;}
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Active Unit")
+	ABaseUnitCharacter* ActiveCharacter;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Active Unit")
+	UParticleSystem* EmitterMousePosition;
 private:
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaSeconds) override;
@@ -52,6 +59,6 @@ private:
 	ABaseCameraPawn* PawnCamera;
 	FVector MouseClickPosition;
 	void HitMouse();
-
-	ABaseUnitCharacter* ActiveCharacter;
+	void MoveUnitToPosition();
+	
 };

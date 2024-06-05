@@ -1,7 +1,7 @@
 #include "Player/BasePlayerController.h"
 
 #include "BaseUnitCharacter.h"
-#include "GameFramework/Character.h"
+//#include "Kismet/GameplayStatics.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/BaseCameraPawn.h"
 
@@ -9,6 +9,8 @@ ABasePlayerController::ABasePlayerController()
 {
 	bShowMouseCursor = true;
 }
+
+
 
 void ABasePlayerController::SetupInputComponent()
 {
@@ -19,6 +21,7 @@ void ABasePlayerController::SetupInputComponent()
 	InputComponent->BindAction(FName("MouseClick"), IE_Released, this, &ABasePlayerController::MouseReleased);
 	InputComponent->BindAxis("MouseY", this,  &ABasePlayerController::CameraScrollY);
 	InputComponent->BindAxis("MouseX", this,  &ABasePlayerController::CameraScrollX);
+	InputComponent->BindAction(FName("MouseRightButton"), IE_Pressed,this,  &ABasePlayerController::MoveUnitToPosition);
 	// if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	// {
 	// 	
@@ -81,29 +84,61 @@ void ABasePlayerController::HitMouse()
 		{
 			const auto LocationHit = &Hit.Location;
 			MouseClickPosition = Hit.Location;
-			UE_LOG(LogTemp, Log, TEXT("Trace hit actor: %s"), *Hit.GetActor()->GetName());
+			//UE_LOG(LogTemp, Log, TEXT("Trace hit actor: %s"), *Hit.GetActor()->GetName());
 			//if(!ParticleEmitter) return;
 			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleEmitter, FVector{MouseClickPosition}, FRotator::ZeroRotator, true);
-
+			
 
 			if(Hit.GetActor()->IsA(ABaseUnitCharacter::StaticClass()))
 			{
+				auto const PlayerValue = Cast<ABaseUnitCharacter>(Hit.GetActor());
 				UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
-				if(!ActiveCharacter || ActiveCharacter != Hit.GetActor())
+
+				if(!ActiveCharacter)
 				{
+					ActiveCharacter = Cast<ABaseUnitCharacter>(Hit.GetActor());
 					if(ActiveCharacter)
-						ActiveCharacter->VisibleDecalSet(false);
+					{
+						ActiveCharacter->VisibleDecalSet(true);
+						UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s"), *Hit.GetActor()->GetName());
+						return;
+					}
+				}
+				else
+				{
+					ActiveCharacter->VisibleDecalSet(false);
 					ActiveCharacter = Cast<ABaseUnitCharacter>(Hit.GetActor());
 					ActiveCharacter->VisibleDecalSet(true);
+					UE_LOG(LogTemp, Log, TEXT("Switch Player : %s"), *Hit.GetActor()->GetName());
+					return;
+				}
+
+				if(PlayerValue == ActiveCharacter)
+				{
+					ActiveCharacter->VisibleDecalSet(false);
+					ActiveCharacter = nullptr;
+					UE_LOG(LogTemp, Log, TEXT("Diactivate Unit : "));
+					
 				}
 			}
 			else
 			{
-				if(!ActiveCharacter) return;
-				ActiveCharacter->VisibleDecalSet(false);
+				if(!EmitterMousePosition && MouseClickPosition == FVector::Zero()) return;
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMousePosition, MouseClickPosition);
 			}
 		}
 	}
 }
 
+void ABasePlayerController::MoveUnitToPosition()
+{
+	
+	if(!ActiveCharacter) return;
 
+	FHitResult Hit;
+	bool isHit = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
+	if(!isHit) return;
+	
+	ActiveCharacter->MoveOnPosition(Hit.Location);
+	UE_LOG(LogTemp, Log, TEXT("Unit Go to Position"));
+}

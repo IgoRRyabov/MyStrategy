@@ -17,19 +17,10 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 void ABaseUnitCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-void ABaseUnitCharacter::VisibleDecalSet(bool value)
+void ABaseUnitCharacter::VisibleDecalSet(bool value) const
 {
 	DecalComponent->SetVisibility(value);
-	if(DecalComponent->IsActive())
-	{
-		UE_LOG(LogTemp, Log, TEXT("Visible Decal Set : %d"), DecalComponent->IsVisible());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("Visible Decal Set : %d"), DecalComponent->IsVisible());
-	}
 }
 
