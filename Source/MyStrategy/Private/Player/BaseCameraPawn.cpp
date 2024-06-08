@@ -44,6 +44,7 @@ void ABaseCameraPawn::CameraScrollY(float value)
 	int ViewportSizeY;
 	PlayerController->GetMousePosition(PositionMouseX, PositionMouseY);
 	PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+	
 	auto PercMousePosX = PositionMouseX / ViewportSizeX;
 
 	if(PercMousePosX > 0.98f)

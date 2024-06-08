@@ -6,7 +6,7 @@
 #include "InputMappingContext.h"
 #include "GameFramework/PlayerController.h"
 #include "BaseUnitCharacter.h"
-#include "Particles/ParticleEmitter.h"
+#include "Components/WidgetComponent.h"
 #include "BasePlayerController.generated.h"
 
 
@@ -18,7 +18,14 @@ class MYSTRATEGY_API ABasePlayerController : public APlayerController
 public:
 	ABasePlayerController();
 
-	
+	UFUNCTION(BlueprintImplementableEvent, Category="CustomEvent")
+	void SetActiveUnit(ABaseUnitCharacter* ActUnit, bool isActive) const;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetDeactiveUnit() const;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeath();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "Effect Mouse Click"))
 	UParticleSystem* ParticleEmitter;
@@ -34,7 +41,18 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Active Unit")
 	UParticleSystem* EmitterMousePosition;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Setting Unit")
+	FDataTableRowHandle UnitDataRow;
+	
+	UFUNCTION(BlueprintCallable)
+	bool isActiveUnits() {return (ActiveCharacter) ? true : false;}
+	
+	UFUNCTION(BlueprintCallable)
+	ABaseUnitCharacter* GetActiveCharacter() {return ActiveCharacter;}
+
 private:
+	
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
@@ -60,5 +78,7 @@ private:
 	FVector MouseClickPosition;
 	void HitMouse();
 	void MoveUnitToPosition();
-	void DecalDiactivated(ABaseUnitCharacter* Unit, bool isActive);
+	void DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive);
+	FHitResult MouseRaycast();
+	
 };

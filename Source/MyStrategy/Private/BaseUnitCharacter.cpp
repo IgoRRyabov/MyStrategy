@@ -17,6 +17,7 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 void ABaseUnitCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void ABaseUnitCharacter::VisibleDecalSet(bool value) const
