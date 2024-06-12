@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UnitWidget.h"
 #include "GameFramework/Character.h"
 #include "BaseUnitCharacter.generated.h"
 
@@ -18,6 +18,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category= "Custom Event")
 	void MoveOnPosition(const FVector& Position);
 
+	UFUNCTION(BlueprintCallable)
+	void HealingUnit();
+	
+	float GetPercentHealthUnit() const {return HealthUnit/MaxHealthUnit;};
+	void VisibleDecalSet(bool value) const;
+
+	void SetVisibilityUnitWidget(ESlateVisibility Visibility);
 protected:
 	virtual void BeginPlay() override;
 	
@@ -27,6 +34,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Image Unit")
 	UTexture2D* ImageUnit;
 
-public:	
-	void VisibleDecalSet(bool value) const;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health Unit")
+	float HealthUnit = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health Unit")
+	float ArmorUnit = 100;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Widget Unit")
+	UUnitWidget* BaseUserWidget;
+private:
+	
+	float MaxHealthUnit = 100;
+	float MaxArmorUnit = 100;
+
+	FTimerHandle TimerHealing;
 };

@@ -1,12 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCameraPawn.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "GameFramework/PlayerController.h"
 #include "BaseUnitCharacter.h"
-#include "Components/WidgetComponent.h"
+#include "BaseCameraPawn.h"
 #include "BasePlayerController.generated.h"
 
 
@@ -19,13 +18,16 @@ public:
 	ABasePlayerController();
 
 	UFUNCTION(BlueprintImplementableEvent, Category="CustomEvent")
-	void SetActiveUnit(ABaseUnitCharacter* ActUnit, bool isActive) const;
+	void SetActiveUnit(ABaseUnitCharacter* ActUnit);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetDeactiveUnit() const;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDeath();
+
+	UFUNCTION(BlueprintCallable)
+	ABaseUnitCharacter* GetActiveCharacter() {return ActiveCharacter;}
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "Effect Mouse Click"))
 	UParticleSystem* ParticleEmitter;
@@ -49,8 +51,7 @@ protected:
 	bool isActiveUnits() {return (ActiveCharacter) ? true : false;}
 	
 	UFUNCTION(BlueprintCallable)
-	ABaseUnitCharacter* GetActiveCharacter() {return ActiveCharacter;}
-
+	float ActiveUnitHealth() {return ActiveCharacter ? ActiveCharacter->GetPercentHealthUnit() : 0;};
 private:
 	
 	virtual void SetupInputComponent() override;
@@ -80,5 +81,4 @@ private:
 	void MoveUnitToPosition();
 	void DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive);
 	FHitResult MouseRaycast();
-	
 };

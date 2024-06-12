@@ -1,10 +1,8 @@
-#include "Player/BasePlayerController.h"
-
+#include "UnitWidget.h"
 #include "BaseUnitCharacter.h"
-//#include "Kismet/GameplayStatics.h"
 #include "UnitData.h"
 #include "Kismet/GameplayStatics.h"
-#include "Player/BaseCameraPawn.h"
+#include "BasePlayerController.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -73,7 +71,7 @@ void ABasePlayerController::HitMouse()
 
 			if(ActiveCharacter && PlayerValue == ActiveCharacter)
 			{
-				DecalSetVisible(PlayerValue, false);
+				DecalSetVisible(ActiveCharacter, false);
 			}
 			else if(ActiveCharacter)
 			{
@@ -83,8 +81,8 @@ void ABasePlayerController::HitMouse()
 			}
 			else
 			{
-				DecalSetVisible(PlayerValue, true);
 				ActiveCharacter = PlayerValue;
+				DecalSetVisible(ActiveCharacter, true);
 			}
 		}else
 		{
@@ -107,10 +105,15 @@ void ABasePlayerController::DecalSetVisible(ABaseUnitCharacter* Unit, bool isAct
 	Unit->VisibleDecalSet(isActive);
 	
 	if(isActive)
-		SetActiveUnit(Unit, isActive);
+	{
+		SetActiveUnit(Unit);
+		//Unit->HealingUnit();
+		Unit->SetVisibilityUnitWidget(ESlateVisibility::Visible);
+	}
 	else
 	{
 		SetDeactiveUnit();
+		Unit->SetVisibilityUnitWidget(ESlateVisibility::Hidden);
 		ActiveCharacter = nullptr;
 	}
 	UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s : %d"), *Unit->GetName(), isActive);
