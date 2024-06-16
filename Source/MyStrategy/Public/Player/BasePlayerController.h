@@ -8,7 +8,7 @@
 #include "BaseCameraPawn.h"
 #include "BasePlayerController.generated.h"
 
-
+class UBuildComponent;
 
 UCLASS()
 class MYSTRATEGY_API ABasePlayerController : public APlayerController
@@ -28,6 +28,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	ABaseUnitCharacter* GetActiveCharacter() {return ActiveCharacter;}
+	
+	UFUNCTION(BlueprintCallable)
+	ABaseCameraPawn* GetCameraPawn() {return PawnCamera;}
+
+	FHitResult MouseRaycast(ECollisionChannel CollisionChannel = ECC_Visibility);
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "Effect Mouse Click"))
 	UParticleSystem* ParticleEmitter;
@@ -46,6 +51,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Setting Unit")
 	FDataTableRowHandle UnitDataRow;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera Pawn")
+	ABaseCameraPawn* PawnCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera Pawn")
+	UBuildComponent* BuildComponent;
 	
 	UFUNCTION(BlueprintCallable)
 	bool isActiveUnits() {return (ActiveCharacter) ? true : false;}
@@ -75,10 +86,10 @@ private:
 	void CameraScrollY(float value);
 	void CameraScrollX(float value);
 	
-	ABaseCameraPawn* PawnCamera;
+	
 	FVector MouseClickPosition;
 	void HitMouse();
 	void MoveUnitToPosition();
 	void DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive);
-	FHitResult MouseRaycast();
+	
 };
