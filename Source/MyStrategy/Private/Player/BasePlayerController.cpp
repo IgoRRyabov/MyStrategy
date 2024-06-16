@@ -1,12 +1,16 @@
+#include "BasePlayerController.h"
 #include "UnitWidget.h"
 #include "BaseUnitCharacter.h"
 #include "UnitData.h"
 #include "Kismet/GameplayStatics.h"
-#include "BasePlayerController.h"
+#include "BuildComponent.h"
 
 ABasePlayerController::ABasePlayerController()
 {
 	bShowMouseCursor = true;
+
+	BuildComponent = CreateDefaultSubobject<UBuildComponent>("Build Component");
+	PawnCamera = CreateDefaultSubobject<ABaseCameraPawn>("Pawn Camera");
 }
 
 
@@ -22,6 +26,8 @@ void ABasePlayerController::SetupInputComponent()
 	
 	InputComponent->BindAxis("MouseY", this,  &ABasePlayerController::CameraScrollY);
 	InputComponent->BindAxis("MouseX", this,  &ABasePlayerController::CameraScrollX);
+
+	InputComponent->BindAction(FName("StartBuilding"), IE_Pressed, BuildComponent,  &UBuildComponent::StartBuilding);
 }
 void ABasePlayerController::Tick(float DeltaSeconds)
 {
@@ -32,7 +38,7 @@ void ABasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	PawnCamera = Cast<ABaseCameraPawn>(GetPawn());
-	//check(PawnCamera);
+	check(PawnCamera);
 	if(auto UnitData = UnitDataRow.DataTable->FindRow<FUnitData>("UnitTest", ""))
 		UE_LOG(LogTemp, Log, TEXT("Succes DataTable : %f"), UnitData->Experience);
 }
@@ -119,10 +125,10 @@ void ABasePlayerController::DecalSetVisible(ABaseUnitCharacter* Unit, bool isAct
 	UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s : %d"), *Unit->GetName(), isActive);
 }
 
-FHitResult ABasePlayerController::MouseRaycast()
+FHitResult ABasePlayerController::MouseRaycast(ECollisionChannel CollisionChannel)
 {
 	FHitResult Hit;
-	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
+	GetHitResultUnderCursor(CollisionChannel, true, Hit);
 	return Hit;
 }
 

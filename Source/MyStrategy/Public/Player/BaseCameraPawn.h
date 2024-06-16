@@ -39,4 +39,6 @@ public:
 	UCameraComponent* CameraComponent;
 
 	APlayerController* PlayerController;
+	UFUNCTION(BlueprintCallable)
+	UCameraComponent* GetCameraComponent() const {return CameraComponent;}
 };

@@ -53,11 +53,13 @@ void ABaseUnitCharacter::HealingUnit()
 
 void ABaseUnitCharacter::SetVisibilityUnitWidget(ESlateVisibility Visibility)
 {
-	BaseUserWidget->SlateVisibility = Visibility;
+	if(BaseUserWidget)
+		BaseUserWidget->SlateVisibility = Visibility;
 }
 
 void ABaseUnitCharacter::VisibleDecalSet(bool value) const
 {
-	DecalComponent->SetVisibility(value);
+	if(DecalComponent)
+		DecalComponent->SetVisibility(value);
 }
 
