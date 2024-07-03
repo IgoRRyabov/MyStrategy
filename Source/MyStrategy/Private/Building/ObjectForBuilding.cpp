@@ -1,4 +1,8 @@
+#pragma once
+
 #include "Building/ObjectForBuilding.h"
+#include "BuildingWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/ActorComponent.h"
 
 AObjectForBuilding::AObjectForBuilding()
@@ -6,15 +10,16 @@ AObjectForBuilding::AObjectForBuilding()
 	PrimaryActorTick.bCanEverTick = false;
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Build Mesh");
 	RootComponent = StaticMeshComponent;
-	BoxComponent = CreateDefaultSubobject<UBoxComponent>("Box Collision");
+	UserWidget = CreateDefaultSubobject<UBuildingWidget>("Build Widget");
+	StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapBegin);
+	StaticMeshComponent->OnComponentEndOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapEnd);
+	
 }
 
 void AObjectForBuilding::BeginPlay()
 {
 	Super::BeginPlay();
-	//BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapBegin);
-	//BoxComponent->OnComponentEndOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapEnd);
-	UE_LOG(LogTemp, Log, TEXT("Start"));
+	StaticMeshComponent->SetMaterial(0, MaterialBuilding[1]);
 }
 
 void AObjectForBuilding::Tick(float DeltaTime)
@@ -25,20 +30,33 @@ void AObjectForBuilding::Tick(float DeltaTime)
 
 void AObjectForBuilding::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("Start Overlap"));
-	static int CountActor;
 	CountActor++;
-	if(OtherActor)
-		UE_LOG(LogTemp, Log, TEXT("Overlap Actor: %s, CountActor = %d"), *OtherActor->GetName(), CountActor);
+
+	if(CountActor > 0)
+	{
+		SetMaterial(0);
+	}else
+	{
+		SetMaterial(1);
+	}
 }
 
 void AObjectForBuilding::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Log, TEXT("End Overlap"));
-	static int CountActor;
 	CountActor--;
-	if(OtherActor)
-		UE_LOG(LogTemp, Log, TEXT("Overlap Actor: %s, CountActor = %d"), *OtherActor->GetName(), CountActor);
+	
+	if(CountActor > 0)
+	{
+		SetMaterial(0);
+	}else
+	{
+		SetMaterial(1);
+	}
+}
+
+void AObjectForBuilding::SetMaterial(int material)
+{
+	StaticMeshComponent->SetMaterial(0, MaterialBuilding[material]);
 }
 
 

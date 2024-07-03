@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "CoreMinimal.h"
 #include "Building/ObjectForBuilding.h"
 #include "Components/ActorComponent.h"
@@ -9,6 +11,9 @@
 class ABasePlayerController;
 class ABaseCameraPawn;
 class UStaticMeshComponent;
+class AObjectForBuilding;
+class UBuildingWidget;
+struct FBuildingObjectData;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MYSTRATEGY_API UBuildComponent : public UActorComponent
@@ -26,18 +31,28 @@ public:
 
 	ABasePlayerController* PlayerController;
 
-	void StartBuilding();
+	void StartBuilding(FName name);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building Mesh")
-	TSubclassOf<AObjectForBuilding> ObjectForBuilding;
+	TArray<TSubclassOf<AObjectForBuilding>> ObjectForBuilding;
 
+	UFUNCTION(BlueprintCallable)
+	UBuildingWidget* GetBuildingWidget() {return BuildingWidget;};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building")
+	UBuildingWidget* BuildingWidget;
 
-	AObjectForBuilding* BuildObject;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
+	FDataTableRowHandle ObjectDataHandle;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
+	TMap<FName, UTexture2D*> IconBuild;
 private:
 
 	bool isBuild = false;
-
 	void Building();
-
+	void CancerBuilding(AObjectForBuilding* ObjectBuild);
 	FVector LocationBuild;
+
+	
 };

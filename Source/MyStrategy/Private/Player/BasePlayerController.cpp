@@ -1,5 +1,6 @@
+#pragma once
+
 #include "BasePlayerController.h"
-#include "UnitWidget.h"
 #include "BaseUnitCharacter.h"
 #include "UnitData.h"
 #include "Kismet/GameplayStatics.h"
@@ -13,8 +14,6 @@ ABasePlayerController::ABasePlayerController()
 	PawnCamera = CreateDefaultSubobject<ABaseCameraPawn>("Pawn Camera");
 }
 
-
-
 void ABasePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -24,10 +23,10 @@ void ABasePlayerController::SetupInputComponent()
 	InputComponent->BindAction(FName("MouseClick"), IE_Released, this, &ABasePlayerController::MouseReleased);
 	InputComponent->BindAction(FName("MouseRightButton"), IE_Pressed,this,  &ABasePlayerController::MoveUnitToPosition);
 	
-	InputComponent->BindAxis("MouseY", this,  &ABasePlayerController::CameraScrollY);
-	InputComponent->BindAxis("MouseX", this,  &ABasePlayerController::CameraScrollX);
+	//InputComponent->BindAxis("MouseY", this,  &ABasePlayerController::CameraScrollY);
+	//InputComponent->BindAxis("MouseX", this,  &ABasePlayerController::CameraScrollX);
 
-	InputComponent->BindAction(FName("StartBuilding"), IE_Pressed, BuildComponent,  &UBuildComponent::StartBuilding);
+	//InputComponent->BindAction(FName("StartBuilding"), IE_Pressed, BuildComponent,  &UBuildComponent::StartBuilding);
 }
 void ABasePlayerController::Tick(float DeltaSeconds)
 {
@@ -38,9 +37,9 @@ void ABasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	PawnCamera = Cast<ABaseCameraPawn>(GetPawn());
-	check(PawnCamera);
-	if(auto UnitData = UnitDataRow.DataTable->FindRow<FUnitData>("UnitTest", ""))
-		UE_LOG(LogTemp, Log, TEXT("Succes DataTable : %f"), UnitData->Experience);
+	//check(PawnCamera);
+	// if(auto UnitData = UnitDataRow.DataTable->FindRow<FUnitData>("UnitTest", ""))
+	// 	UE_LOG(LogTemp, Log, TEXT("Succes DataTable : %f"), UnitData->Experience);
 }
 
 void ABasePlayerController::MousePressed()

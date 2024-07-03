@@ -1,68 +1,41 @@
 #include "BuildComponent.h"
+#include "BuildingWidget.h"
 #include "BasePlayerController.h"
-
+#include "BuildingWidget.h"
+#include "UnitData.h"
 
 UBuildComponent::UBuildComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	//StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Building Mesh");
+	BuildingWidget = CreateDefaultSubobject<UBuildingWidget>("Building Widget");
 }
 
 void UBuildComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	PlayerController = Cast<ABasePlayerController>(GetOwner());
-	
-	UE_LOG(LogTemp, Log, TEXT("Build Component parent : %s"), *PlayerController->GetName());
-	
+
 }
 
 void UBuildComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if(isBuild)
-	{
-		auto const HitMouse =  PlayerController->MouseRaycast(ECollisionChannel::ECC_GameTraceChannel1);//ECollisionChannel::ECC_BuildChannel);
-		// if(HitMouse.GetActor())
-		// {
-		// 	UE_LOG(LogTemp, Log, TEXT("Location to Build Object : %s"), *HitMouse.GetActor()->GetName());
-		// }
-		// else
-		// {
-		// 	UE_LOG(LogTemp, Log, TEXT("Error Trace Engine Channel"));
-		// }
-		LocationBuild = HitMouse.Location;
-		if(!BuildObject)
-		{
-			BuildObject = GetWorld()->SpawnActor<AObjectForBuilding>(ObjectForBuilding);
-		}
-		if(BuildObject)
-		{
-			BuildObject->SetActorLocation(LocationBuild);
-			
-		}
-		
-	}else if(BuildObject)
-	{
-		BuildObject = nullptr;
-	}
+	
 }
 
-void UBuildComponent::StartBuilding()
+void UBuildComponent::StartBuilding(FName name)
 {
-	if(isBuild)
-		isBuild = false;
-	else
-	{
-		isBuild = true;
-		Building();
-	}
+	UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *name.ToString());
 }
+
 
 void UBuildComponent::Building()
 {
 	
 }
 
+void UBuildComponent::CancerBuilding(AObjectForBuilding* ObjectBuild)
+{
+	
+}

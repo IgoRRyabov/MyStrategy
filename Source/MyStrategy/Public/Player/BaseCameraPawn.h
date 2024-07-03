@@ -35,10 +35,14 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= "Camera")
 	USpringArmComponent* SpringArmComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Camera")
-	UCameraComponent* CameraComponent;
+	
 
 	APlayerController* PlayerController;
 	UFUNCTION(BlueprintCallable)
 	UCameraComponent* GetCameraComponent() const {return CameraComponent;}
+
+private:
+	UCameraComponent* CameraComponent;
+	void CameraUp(float value);
+	void CameraRight(float value);
 };

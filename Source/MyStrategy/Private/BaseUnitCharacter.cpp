@@ -41,7 +41,7 @@ void ABaseUnitCharacter::HealingUnit()
 		HealthUnit += 5;
 		GetWorld()->GetTimerManager().SetTimer(TimerHealing, this, &ABaseUnitCharacter::HealingUnit,  1.f, true);
 
-		(HealthUnit > MaxHealthUnit) ? BaseUserWidget->HealingUnit(1) : BaseUserWidget->HealingUnit(HealthUnit / MaxHealthUnit);
+		(HealthUnit > MaxHealthUnit) ? BaseUserWidget->HealingUnit(1) : BaseUserWidget->HealingUnit(HealthPercent());
 	}
 	else
 	{

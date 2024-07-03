@@ -32,6 +32,8 @@ void ABaseCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	InputComponent->BindAxis("CameraUp", this,  &ABaseCameraPawn::CameraUp);
+	InputComponent->BindAxis("CameraRight", this,  &ABaseCameraPawn::CameraRight);
 }
 
 void ABaseCameraPawn::CameraScrollY(float value)
@@ -83,4 +85,18 @@ void ABaseCameraPawn::CameraScrollX(float value)
 		FVector VectorOffsetY = {Offset, 0, 0};
 		AddActorWorldOffset(VectorOffsetY);
 	}
+}
+
+void ABaseCameraPawn::CameraUp(float value)
+{
+	double Offset = MultiOffsetCameraPos * GetWorld()->GetDeltaSeconds() * value;
+	FVector VectorOffsetY = {-Offset, 0 ,0 };
+	AddActorWorldOffset(VectorOffsetY);
+}
+
+void ABaseCameraPawn::CameraRight(float value)
+{
+	double Offset = MultiOffsetCameraPos * GetWorld()->GetDeltaSeconds() * value;
+	FVector VectorOffsetY = {0, Offset, 0};
+	AddActorWorldOffset(VectorOffsetY);
 }

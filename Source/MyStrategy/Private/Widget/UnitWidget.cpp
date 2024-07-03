@@ -14,15 +14,5 @@ void UUnitWidget::HealingUnitButton(float healthValue)
 	{
 		ActiveHealing = true;
 		OwnerUnit->HealingUnit();
-		UE_LOG(LogTemp, Log, TEXT("Healing Button Start"));
 	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("Healing Button Error"));
-	}
-}
-
-void UUnitWidget::SetOwnerUnit(ABaseUnitCharacter* OwnerUnitValue)
-{
-	OwnerUnit = OwnerUnitValue;
 }

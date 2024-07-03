@@ -25,6 +25,11 @@ public:
 	void VisibleDecalSet(bool value) const;
 
 	void SetVisibilityUnitWidget(ESlateVisibility Visibility);
+
+	UFUNCTION(BlueprintCallable)
+	float GetHealthUnit() const {return HealthUnit;}
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealthUnit() const {return MaxHealthUnit;}
 protected:
 	virtual void BeginPlay() override;
 	
@@ -48,4 +53,5 @@ private:
 	float MaxArmorUnit = 100;
 
 	FTimerHandle TimerHealing;
+	float HealthPercent() {return HealthUnit / MaxHealthUnit;};
 };

@@ -17,13 +17,16 @@ class MYSTRATEGY_API ABasePlayerController : public APlayerController
 public:
 	ABasePlayerController();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category= "Widget Event")
+	void AddVertBoxElement(UBuildingWidget* UserWidget);
+	
 	UFUNCTION(BlueprintImplementableEvent, Category="CustomEvent")
 	void SetActiveUnit(ABaseUnitCharacter* ActUnit);
-
-	UFUNCTION(BlueprintImplementableEvent)
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="CustomEvent")
 	void SetDeactiveUnit() const;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Category="CustomEvent")
 	void OnDeath();
 
 	UFUNCTION(BlueprintCallable)
@@ -33,6 +36,8 @@ public:
 	ABaseCameraPawn* GetCameraPawn() {return PawnCamera;}
 
 	FHitResult MouseRaycast(ECollisionChannel CollisionChannel = ECC_Visibility);
+
+	UBuildComponent* GetBuildComponent() {return BuildComponent;}
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "Effect Mouse Click"))
 	UParticleSystem* ParticleEmitter;
@@ -55,8 +60,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera Pawn")
 	ABaseCameraPawn* PawnCamera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera Pawn")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building")
 	UBuildComponent* BuildComponent;
+
+	
 	
 	UFUNCTION(BlueprintCallable)
 	bool isActiveUnits() {return (ActiveCharacter) ? true : false;}
@@ -91,5 +98,4 @@ private:
 	void HitMouse();
 	void MoveUnitToPosition();
 	void DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive);
-	
 };
