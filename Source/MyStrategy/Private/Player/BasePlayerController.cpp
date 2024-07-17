@@ -2,8 +2,9 @@
 
 #include "BasePlayerController.h"
 #include "BaseUnitCharacter.h"
-#include "UnitData.h"
+#include "GameData.h"
 #include "Kismet/GameplayStatics.h"
+#include "ManagerBuildingComponent.h"
 #include "BuildComponent.h"
 
 ABasePlayerController::ABasePlayerController()
@@ -12,6 +13,8 @@ ABasePlayerController::ABasePlayerController()
 
 	BuildComponent = CreateDefaultSubobject<UBuildComponent>("Build Component");
 	PawnCamera = CreateDefaultSubobject<ABaseCameraPawn>("Pawn Camera");
+	ManagerBuildingComponent = CreateDefaultSubobject<UManagerBuildingComponent>("Manager Building Component");
+	ManagerResoursesComponent = CreateDefaultSubobject<UManagerResoursesComponent>("Manager Resourses Component");
 }
 
 void ABasePlayerController::SetupInputComponent()
@@ -50,6 +53,7 @@ void ABasePlayerController::MousePressed()
 
 void ABasePlayerController::MouseReleased()
 {
+	LeftMouseClick = true;
 	isMousePressed = false;
 }
 
@@ -66,33 +70,32 @@ void ABasePlayerController::CameraScrollX(float value)
 
 void ABasePlayerController::HitMouse()
 {
-	if(isMousePressed)
+	if(isMousePressed)// && CanSelectUnit)
 	{
 		const auto Hit = MouseRaycast();
-		if(Hit.GetActor()->IsA(ABaseUnitCharacter::StaticClass()))
+		if(Hit.IsValidBlockingHit())
 		{
-			auto const PlayerValue = Cast<ABaseUnitCharacter>(Hit.GetActor());
-			UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
+			if(Hit.GetActor()->IsA(ABaseUnitCharacter::StaticClass()))
+			{
+				auto const PlayerValue = Cast<ABaseUnitCharacter>(Hit.GetActor());
+				UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
 
-			if(ActiveCharacter && PlayerValue == ActiveCharacter)
-			{
-				DecalSetVisible(ActiveCharacter, false);
+				if(ActiveCharacter && PlayerValue == ActiveCharacter)
+				{
+					DecalSetVisible(ActiveCharacter, false);
+				}
+				else if(ActiveCharacter)
+				{
+					DecalSetVisible(ActiveCharacter, false);
+					ActiveCharacter = PlayerValue;
+					DecalSetVisible(PlayerValue, true);
+				}
+				else
+				{
+					ActiveCharacter = PlayerValue;
+					DecalSetVisible(ActiveCharacter, true);
+				}
 			}
-			else if(ActiveCharacter)
-			{
-				DecalSetVisible(ActiveCharacter, false);
-				ActiveCharacter = PlayerValue;
-				DecalSetVisible(PlayerValue, true);
-			}
-			else
-			{
-				ActiveCharacter = PlayerValue;
-				DecalSetVisible(ActiveCharacter, true);
-			}
-		}else
-		{
-			if(!EmitterMousePosition && MouseRaycast().Location != FVector::Zero()) return;
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterMousePosition, MouseRaycast().Location);
 		}
 	}
 }
@@ -102,7 +105,6 @@ void ABasePlayerController::MoveUnitToPosition()
 	if(!ActiveCharacter) return;
 	
 	ActiveCharacter->MoveOnPosition(MouseRaycast().Location);
-	UE_LOG(LogTemp, Log, TEXT("Unit Go to Position"));
 }
 
 void ABasePlayerController::DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive)

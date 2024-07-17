@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UnitData.h"
+#include "GameData.h"
 #include "Widget/BaseUserWidget.h"
 #include "BuildingWidget.generated.h"
 

@@ -44,6 +44,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
 	FDataTableRowHandle ObjectDataHandle;
+
+	FBuildingObjectData* BuildingObjectData;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
 	TMap<FName, UTexture2D*> IconBuild;
@@ -51,8 +53,9 @@ private:
 
 	bool isBuild = false;
 	void Building();
-	void CancerBuilding(AObjectForBuilding* ObjectBuild);
+	void CancerBuilding();
 	FVector LocationBuild;
-
-	
+	void ResetBuildingValue();
+	TSubclassOf<AObjectForBuilding> BuildObj;
+	AObjectForBuilding* BuildingRef;
 };
