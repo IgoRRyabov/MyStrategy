@@ -10,14 +10,7 @@ UManagerResoursesComponent::UManagerResoursesComponent()
 
 void UManagerResoursesComponent::UpdateResourse(ETypeResourse TRes, float value)
 {
-	switch (TRes)
-	{
-	case ETypeResourse::Gold:
-		SetGold(value);
-		break;
-	default:
-			break;
-	}
+	SetResouse(TRes, value);
 }
 
 bool UManagerResoursesComponent::GetResourse(TMap<TEnumAsByte<ETypeResourse>, int> PRes)

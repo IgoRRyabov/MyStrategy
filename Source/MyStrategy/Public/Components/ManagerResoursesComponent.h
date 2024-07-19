@@ -16,10 +16,11 @@ public:
 	UManagerResoursesComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetGold(float value)
+	void SetResouse(ETypeResourse TRes, float value)
 	{
-		CountGold += FMath::Max(0, value);
-		//UE_LOG(LogTemp, Log, TEXT("CountGoldNow : %f"), CountGold);
+		*PlayerResourse.Find(TRes) += FMath::Max(0, value);
+		UE_LOG(LogTemp, Log, TEXT("CountResSet : %d"), TRes);
+		UE_LOG(LogTemp, Log, TEXT("CountResSet : %d"), *PlayerResourse.Find(TRes));
 	}
 	float GetGold() const {return CountGold;}
 	
@@ -30,7 +31,8 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-	
+
+	// Все ресурсы игрока
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<ETypeResourse>, int> PlayerResourse;
 private:

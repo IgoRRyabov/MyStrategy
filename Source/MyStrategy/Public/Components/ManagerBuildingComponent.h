@@ -14,17 +14,15 @@ class MYSTRATEGY_API UManagerBuildingComponent : public UActorComponent
 public:	
 	UManagerBuildingComponent();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION()
 	void AddCountBuilding(ETypeBuild TypeBuilding);
 	
-	UFUNCTION()
-	void Test();
+protected:
+	virtual void BeginPlay() override;
+
+	TMap<TEnumAsByte<ETypeBuild>, int> CountBuilding;
 private:
 	// Кол-во построенных зданий
 	int SumCountBuildint = 0;

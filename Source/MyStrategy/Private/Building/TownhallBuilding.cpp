@@ -5,7 +5,7 @@ void ATownhallBuilding::AddResourse(int value)
 {
 	Resourse += value;
 	if(Resourse > MaxResourse) Resourse = MaxResourse;
-	TypeBuild = ETypeBuild::TownHall;
+	TypeBuild = TownHall;
 }
 
 void ATownhallBuilding::BeginPlay()

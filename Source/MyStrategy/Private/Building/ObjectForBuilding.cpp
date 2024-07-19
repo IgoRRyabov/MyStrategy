@@ -14,9 +14,7 @@ AObjectForBuilding::AObjectForBuilding()
 	UserWidget = CreateDefaultSubobject<UBuildingWidget>("Build Widget");
 	StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapBegin);
 	StaticMeshComponent->OnComponentEndOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapEnd);
-	if(!BlockBuild.IsEmpty())
-		StaticMeshComponent->SetStaticMesh(BlockBuild[0]);
-	
+	TypeBuild = Default;
 }
 
 void AObjectForBuilding::BeginPlay()
@@ -24,7 +22,8 @@ void AObjectForBuilding::BeginPlay()
 	Super::BeginPlay();
 	StaticMeshComponent->SetMaterial(0, MaterialBuilding[1]);
 	StaticMeshComponent->SetCollisionProfileName("OverlapAll");
-	MaxNumberStageBuiding = BlockBuild.Max();
+	if(!BlockBuild.IsEmpty())
+		MaxNumberStageBuiding = BlockBuild.Num();
 }
 
 void AObjectForBuilding::Tick(float DeltaTime)
@@ -83,6 +82,7 @@ void AObjectForBuilding::SetCollisionProfile(FName CollProfile) const
 
 void AObjectForBuilding::StartBuilding()
 {
+	UE_LOG(LogTemp, Log, TEXT("Max Stage Building: %d "), MaxNumberStageBuiding);
 	if(!BuildingStart)
 	{
 		if(!isCountResourseOK())
@@ -98,8 +98,8 @@ void AObjectForBuilding::StartBuilding()
 		if(NumberStageBuiding > MaxNumberStageBuiding)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(TimerBuilding);
-			UE_LOG(LogTemp, Log, TEXT("Max Stage Building: %d "), MaxNumberStageBuiding);
-			DelegateTest.Broadcast(TypeBuild);
+			
+			OnNewBuilding.Broadcast(TypeBuild);
 			ResourseExtraction();
 			return;
 		}
@@ -112,7 +112,7 @@ void AObjectForBuilding::StartBuilding()
 
 void AObjectForBuilding::SetMeshBuild(int NumberStageBuilding)
 {
-	if(NumberStageBuilding >= MaxNumberStageBuiding) return;
+	if(NumberStageBuilding >= (MaxNumberStageBuiding)) return;
 	
 	StaticMeshComponent->SetStaticMesh(BlockBuild[NumberStageBuilding]);
 	ScoreBuilding = 0;
@@ -120,7 +120,7 @@ void AObjectForBuilding::SetMeshBuild(int NumberStageBuilding)
 
 void AObjectForBuilding::ResourseExtraction()
 {
-	GetWorld()->GetTimerManager().SetTimer(TimerResourse, this, &AObjectForBuilding::ResourseExtractionStart, GetTimerMin(1), false);
+	GetWorld()->GetTimerManager().SetTimer(TimerResourse, this, &AObjectForBuilding::ResourseExtractionStart,5.f , false); //
 }
 
 bool AObjectForBuilding::isCountResourseOK()
@@ -130,7 +130,35 @@ bool AObjectForBuilding::isCountResourseOK()
 
 void AObjectForBuilding::ResourseExtractionStart()
 {
-	OnUpdateResouse.Broadcast(ETypeResourse::Gold, 10);
-	ResourseExtraction();
+	int UpdataRes = AddResWarhouse(BaseResourseFromThisBuild, CountExtractionRes);
+	OnUpdateResouse.Broadcast(BaseResourseFromThisBuild, UpdataRes);
+	UE_LOG(LogTemp, Log, TEXT("Start Extraction Resourse"));
+
+	if(isResourseExtract) ResourseExtraction();
 }
 
+void AObjectForBuilding::ResourseExtractionStop()
+{
+	GetWorld()->GetTimerManager().ClearTimer(TimerResourse);
+	isResourseExtract = false;
+}
+
+int AObjectForBuilding::AddResWarhouse(ETypeResourse TRes, int value)
+{
+	
+	if(WarehouseVolume + value <= MaxWarehouseVolume)
+	{
+		Storage.Add(TRes, *Storage.Find(TRes) + value);
+		WarehouseVolume += value;
+		return value;
+	}
+	
+	int tempValue = *Storage.Find(TRes) + MaxWarehouseVolume - WarehouseVolume; 
+	Storage.Add(TRes, FMath::Max(0, tempValue));
+	
+	ResourseExtractionStop();
+	WarehouseVolume = MaxWarehouseVolume;
+	UE_LOG(LogTemp, Log, TEXT("Warhouse Error %d "), WarehouseVolume);
+
+	return MaxWarehouseVolume - WarehouseVolume;
+}

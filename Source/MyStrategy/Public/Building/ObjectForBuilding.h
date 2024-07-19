@@ -32,7 +32,7 @@ class MYSTRATEGY_API AObjectForBuilding : public AActor
 	
 public:	
 	AObjectForBuilding();
-	FDelegateTest DelegateTest;
+	FDelegateTest OnNewBuilding;
 	FOnUpdateResouse OnUpdateResouse;
 	
 	UBuildingWidget* GetUserWidget() const {return UserWidget;}
@@ -59,6 +59,8 @@ public:
 	/*Ресурсы необходимые для строительства*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<ETypeResourse>, int> ResourseForBuilding;
+
+	int AddResWarhouse(ETypeResourse TRes, int value);
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -68,20 +70,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Mesh Build object")
 	UBoxComponent* BoxComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Material Build object")
-	TArray<UMaterialInstance*> MaterialBuildingInstance;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Material Build object")
 	TArray<UMaterial*> MaterialBuilding;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Material Build object")
-	UMaterial* MaterialBuild;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Interface Build")
 	UBuildingWidget* UserWidget;
 
-	ETypeBuild TypeBuild;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Type Build")
+	TEnumAsByte<ETypeBuild> TypeBuild;
 	
 	/* Кол-во акторов мешающих строительству*/
 	int CountActor = 0;
@@ -122,18 +119,28 @@ protected:
 	void SetMeshBuild(int NumberStageBuilding);
 	virtual void ResourseExtraction();
 	
-	TMap<ETypeResourse, int> Storage;
+	// Склад ресурсов
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Warehouse")
+	TMap<TEnumAsByte<ETypeResourse>, int> Storage;
+	int WarehouseVolume = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Warehouse")
+	int MaxWarehouseVolume = 200;
 	/*Ресурсов для строительства достаточно?*/
 	bool CountResourseOK = false;
-
 	bool isCountResourseOK();
+
+	virtual void ResourseExtractionStart();
 	
-	
-	
-private:
-	void ResourseExtractionStart();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resourse Extraction")
+	TEnumAsByte<ETypeResourse> BaseResourseFromThisBuild = BaseResourse;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resourse Extraction")
+	int CountExtractionRes = 50;
+	bool isResourseExtract = true;
 	ABasePlayerController* BasePlayerController;
 	bool BuildingStart = false;
+
+	void ResourseExtractionStop();
 };
 
 enum BuildState

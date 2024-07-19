@@ -73,7 +73,7 @@ void UBuildComponent::Building()
 {
 	BuildingRef->SetIsBuilding(true);
 	BuildingRef->Building();
-	BuildingRef->DelegateTest.AddDynamic(PlayerController->GetManagerBuildingComponent(), &UManagerBuildingComponent::AddCountBuilding);
+	BuildingRef->OnNewBuilding.AddDynamic(PlayerController->GetManagerBuildingComponent(), &UManagerBuildingComponent::AddCountBuilding);
 	BuildingRef->OnUpdateResouse.AddDynamic(PlayerController->GetManagerResoursesComponent(), &UManagerResoursesComponent::UpdateResourse);
 	BuildingRef->SetPlayerController(PlayerController);
 	ResetBuildingValue();
