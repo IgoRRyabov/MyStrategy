@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseUnitCharacter.h"
+#include "BuildingIconWidget.h"
 #include "GameData.generated.h"
 
 class AObjectForBuilding;
@@ -50,6 +51,9 @@ struct FBuildingObjectData : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AObjectForBuilding> BuildingObjectRef;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UBuildingIconWidget> BuildingIcontRef;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UTexture2D* IconBuild;

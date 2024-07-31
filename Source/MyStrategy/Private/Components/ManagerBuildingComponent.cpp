@@ -26,6 +26,6 @@ void UManagerBuildingComponent::AddCountBuilding(ETypeBuild TypeBuilding)
 		CountBuilding.Add(TypeBuilding);
 	CountBuilding.Add(TypeBuilding, *CountBuilding.Find(TypeBuilding) + 1);
 	
-	UE_LOG(LogTemp, Log, TEXT("SumCountBuildint : %d"), SumCountBuildint);
-	UE_LOG(LogTemp, Log, TEXT("Type = %d, Count =  : %d"), TypeBuilding, *CountBuilding.Find(TypeBuilding));
+	//UE_LOG(LogTemp, Log, TEXT("SumCountBuilding : %d"), SumCountBuildint);
+	//UE_LOG(LogTemp, Log, TEXT("Type = %d, Count =  : %d"), TypeBuilding, *CountBuilding.Find(TypeBuilding));
 }

@@ -48,12 +48,14 @@ void UBuildComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			}
 		}
 	}
+	
 }
 
 void UBuildComponent::StartBuilding(FName name)
 {
+	LeftMouseClick = false;
 	isBuild = false;
-	UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *name.ToString());
+	//UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *name.ToString());
 	const auto Test = ObjectDataHandle.DataTable->FindRow<FBuildingObjectData>(name, " ");
 	if(!isBuild)
 	{
@@ -83,7 +85,7 @@ void UBuildComponent::CancerBuilding()
 {
 	BuildingRef->Destroy();
 	ResetBuildingValue();
-	UE_LOG(LogTemp, Log, TEXT("Cancel Building End!! "));
+	//UE_LOG(LogTemp, Log, TEXT("Cancel Building End!! "));
 }
 
 void UBuildComponent::ResetBuildingValue()

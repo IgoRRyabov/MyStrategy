@@ -17,13 +17,13 @@ bool UManagerResoursesComponent::GetResourse(TMap<TEnumAsByte<ETypeResourse>, in
 {
 	if(PlayerResourse.IsEmpty() || PRes.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Error !!!!"));
+		//UE_LOG(LogTemp, Warning, TEXT("Error !!!!"));
 		return false;	
 	}
 	if(*PRes.Find(Gold) > *PlayerResourse.Find(Gold)) return false;
 	*PlayerResourse.Find(Gold) = *PlayerResourse.Find(Gold) - *PRes.Find(Gold);
 	
-	UE_LOG(LogTemp, Log, TEXT("CountGoldNow : %d"), *PlayerResourse.Find(Gold));
+	//UE_LOG(LogTemp, Log, TEXT("CountGoldNow : %d"), *PlayerResourse.Find(Gold));
 	return true;
 }
 

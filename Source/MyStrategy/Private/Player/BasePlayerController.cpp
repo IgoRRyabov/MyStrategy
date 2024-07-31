@@ -48,6 +48,7 @@ void ABasePlayerController::BeginPlay()
 void ABasePlayerController::MousePressed()
 {
 	isMousePressed = true;
+	LeftMouseClick = false;
 	HitMouse();
 }
 
@@ -78,7 +79,7 @@ void ABasePlayerController::HitMouse()
 			if(Hit.GetActor()->IsA(ABaseUnitCharacter::StaticClass()))
 			{
 				auto const PlayerValue = Cast<ABaseUnitCharacter>(Hit.GetActor());
-				UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
+				//UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
 
 				if(ActiveCharacter && PlayerValue == ActiveCharacter)
 				{

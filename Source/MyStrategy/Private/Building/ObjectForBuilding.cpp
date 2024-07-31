@@ -82,12 +82,12 @@ void AObjectForBuilding::SetCollisionProfile(FName CollProfile) const
 
 void AObjectForBuilding::StartBuilding()
 {
-	UE_LOG(LogTemp, Log, TEXT("Max Stage Building: %d "), MaxNumberStageBuiding);
+	//UE_LOG(LogTemp, Log, TEXT("Max Stage Building: %d "), MaxNumberStageBuiding);
 	if(!BuildingStart)
 	{
 		if(!isCountResourseOK())
 		{
-			UE_LOG(LogTemp, Log, TEXT("Not Gold!!!!"));
+			//UE_LOG(LogTemp, Log, TEXT("Not Gold!!!!"));
 			return;
 		}
 	}
@@ -104,7 +104,7 @@ void AObjectForBuilding::StartBuilding()
 			return;
 		}
 		SetMeshBuild(NumberStageBuiding);
-		UE_LOG(LogTemp, Log, TEXT("Stage Building: %d "), NumberStageBuiding);
+		//UE_LOG(LogTemp, Log, TEXT("Stage Building: %d "), NumberStageBuiding);
 		NumberStageBuiding++;
 	}
 	Building();
@@ -132,7 +132,7 @@ void AObjectForBuilding::ResourseExtractionStart()
 {
 	int UpdataRes = AddResWarhouse(BaseResourseFromThisBuild, CountExtractionRes);
 	OnUpdateResouse.Broadcast(BaseResourseFromThisBuild, UpdataRes);
-	UE_LOG(LogTemp, Log, TEXT("Start Extraction Resourse"));
+	//UE_LOG(LogTemp, Log, TEXT("Start Extraction Resourse"));
 
 	if(isResourseExtract) ResourseExtraction();
 }
@@ -158,7 +158,7 @@ int AObjectForBuilding::AddResWarhouse(ETypeResourse TRes, int value)
 	
 	ResourseExtractionStop();
 	WarehouseVolume = MaxWarehouseVolume;
-	UE_LOG(LogTemp, Log, TEXT("Warhouse Error %d "), WarehouseVolume);
+	//UE_LOG(LogTemp, Log, TEXT("Warhouse Error %d "), WarehouseVolume);
 
 	return MaxWarehouseVolume - WarehouseVolume;
 }
