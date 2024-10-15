@@ -11,6 +11,4 @@ void ATownhallBuilding::AddResourse(int value)
 void ATownhallBuilding::BeginPlay()
 {
 	Super::BeginPlay();
-
-	SetMaxCountUnit(5);
 }

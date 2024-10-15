@@ -2,12 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "UnitWidget.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "BaseUnitCharacter.generated.h"
 
 class UDecalComponent;
 class UWidget;
-UCLASS()
+UCLASS(Abstract)
 class MYSTRATEGY_API ABaseUnitCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -30,6 +31,7 @@ public:
 	float GetHealthUnit() const {return HealthUnit;}
 	UFUNCTION(BlueprintCallable)
 	float GetMaxHealthUnit() const {return MaxHealthUnit;}
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -54,4 +56,6 @@ private:
 
 	FTimerHandle TimerHealing;
 	float HealthPercent() {return HealthUnit / MaxHealthUnit;};
+
+	bool isWantEnterBuilding = false;
 };

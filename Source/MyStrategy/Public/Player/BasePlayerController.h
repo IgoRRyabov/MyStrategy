@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ABaseCameraPawn* GetCameraPawn() {return PawnCamera;}
 
-	FHitResult MouseRaycast(ECollisionChannel CollisionChannel = ECC_Visibility);
+	FHitResult MouseRaycast(ECollisionChannel CollisionChannel = ECC_MouseRaycast);
 
 	UBuildComponent* GetBuildComponent() const {return BuildComponent;}
 	UManagerBuildingComponent* GetManagerBuildingComponent() const {return ManagerBuildingComponent;}

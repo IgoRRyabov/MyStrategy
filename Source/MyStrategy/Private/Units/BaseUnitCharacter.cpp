@@ -1,4 +1,7 @@
 #include "BaseUnitCharacter.h"
+
+#include "ObjectForBuilding.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
 
 ABaseUnitCharacter::ABaseUnitCharacter()
@@ -13,7 +16,6 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 	DecalComponent->SetVisibility(false);
 	
 	BaseUserWidget = CreateDefaultSubobject<UUnitWidget>("Unit Widget");
-	
 }
 
 void ABaseUnitCharacter::BeginPlay()
