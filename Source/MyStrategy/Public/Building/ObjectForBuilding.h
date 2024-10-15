@@ -31,44 +31,51 @@ class MYSTRATEGY_API AObjectForBuilding : public AActor
 	
 public:	
 	AObjectForBuilding();
-	FDelegateTest OnNewBuilding;
-	FOnUpdateResouse OnUpdateResouse;
 	
+	FDelegateTest OnNewBuilding; // Событие при строительстве дома
+	FOnUpdateResouse OnUpdateResouse; // Событие добычи ресурсов
+
+	/*
+	 * Получение Widget'а здания
+	 */
 	UBuildingWidget* GetUserWidget() const {return UserWidget;}
+	/*
+	 * Проверка Widget здания
+	 */
 	ETypeBuild GetTypeBuilding() const {return TypeBuild;}
-	
+
+	/*
+	 *Обработка столкновения со зданием
+	 */
 	UFUNCTION(BlueprintCallable)
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	UFUNCTION(BlueprintCallable)
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	virtual void OverlapBegin(class AActor* OtherActor);
+	virtual void OverlapEnd(class AActor* OtherActor);
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	
+	/*
+	 *	Добавление объектов для Blueprint классов
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Mesh Build object")
 	UStaticMeshComponent* StaticMeshComponent;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Mesh Build object")
 	UBoxComponent* BoxComponent;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Material Build object")
 	TArray<UMaterial*> MaterialBuilding;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Interface Build")
 	UBuildingWidget* UserWidget;
-
+	/*
+	 *Тип здания
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Type Build")
 	TEnumAsByte<ETypeBuild> TypeBuild;
 };
 
-enum BuildState
-{
-	StartBuilding,
-	FirstStage,
-	SecondStage,
-	FinalStage
-};
+
 
 

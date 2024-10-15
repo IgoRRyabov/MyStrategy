@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Building/ObjectForBuilding.h"
-
-#include "BasePlayerController.h"
 #include "BuildingWidget.h"
-#include "Components/ActorComponent.h"
 
 AObjectForBuilding::AObjectForBuilding()
 {
@@ -22,12 +19,6 @@ void AObjectForBuilding::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AObjectForBuilding::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void AObjectForBuilding::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	
@@ -36,4 +27,14 @@ void AObjectForBuilding::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAc
 void AObjectForBuilding::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
+}
+
+void AObjectForBuilding::OverlapBegin(class AActor* OtherActor)
+{
+	
+}
+
+void AObjectForBuilding::OverlapEnd(class AActor* OtherActor)
+{
+	
 }

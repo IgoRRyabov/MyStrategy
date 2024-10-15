@@ -82,5 +82,12 @@ enum ETypeBuild
 	TownHall
 };
 
-
+UENUM()
+enum BuildState
+{
+	StartBuilding,
+	FirstStage,
+	SecondStage,
+	FinalStage
+};
 
