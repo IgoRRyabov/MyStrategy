@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseUnitCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Materials/Material.h"
 #include "GameFramework/Actor.h"
 #include "GameData.h"
+#include "Interface/EnterInterface.h"
 #include "ObjectForBuilding.generated.h"
 
 class ABasePlayerController;
@@ -25,7 +25,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateTest, ETypeBuild, TypeBuild
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateResouse, ETypeResourse, TypeResourse, float, value);
 
 UCLASS(Abstract)
-class MYSTRATEGY_API AObjectForBuilding : public AActor
+class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface
 {
 	GENERATED_BODY()
 	
@@ -40,7 +40,7 @@ public:
 	 */
 	UBuildingWidget* GetUserWidget() const {return UserWidget;}
 	/*
-	 * Проверка Widget здания
+	 * Получить тип здания
 	 */
 	ETypeBuild GetTypeBuilding() const {return TypeBuild;}
 
@@ -52,11 +52,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	virtual void OverlapBegin(class AActor* OtherActor);
-	virtual void OverlapEnd(class AActor* OtherActor);
+	virtual void InterfaceOverlapBegin(class AActor* OtherActor) override;
+	virtual void InterfaceOverlapEnd(class AActor* OtherActor) override;
+	virtual void AddUnits(AActor* unit) override;
+	virtual void MinusUnits(AActor* unit) override;
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 	
 	/*
 	 *	Добавление объектов для Blueprint классов
@@ -69,11 +70,25 @@ protected:
 	TArray<UMaterial*> MaterialBuilding;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Interface Build")
 	UBuildingWidget* UserWidget;
+
 	/*
 	 *Тип здания
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Type Build")
 	TEnumAsByte<ETypeBuild> TypeBuild;
+	
+	/*
+	 * Ресурсы для строительства
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resourse from building")
+	TMap<TEnumAsByte<ETypeResourse>, int> ResourseForBuilding;
+
+	/*
+	 * Юниты внутри здания
+	 */
+	TMap<FName, ABaseUnitCharacter*> UnitsInBuiding;
+private:
+	
 };
 
 

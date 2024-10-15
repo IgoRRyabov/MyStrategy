@@ -18,6 +18,26 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 	BaseUserWidget = CreateDefaultSubobject<UUnitWidget>("Unit Widget");
 }
 
+void ABaseUnitCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor->GetClass()->ImplementsInterface(UEnterInterface::StaticClass()))
+	{
+		if(isWantEnterBuilding)
+		{
+			//Вход в здание
+			auto object = Cast<IEnterInterface>(OtherActor);
+			EnterBuilding(object);
+		}
+		UE_LOG(LogTemp, Log, TEXT("Interface find in  : %s"), *OtherComp->GetName());
+	}
+}
+
+void ABaseUnitCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
+}
+
 void ABaseUnitCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -31,7 +51,16 @@ void ABaseUnitCharacter::BeginPlay()
 		UE_LOG(LogTemp, Log, TEXT("User Widget : %s"), *BaseUserWidget->GetName());
 		BaseUserWidget->SetOwnerUnit(this);
 	}
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ABaseUnitCharacter::OnOverlapBegin);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &ABaseUnitCharacter::OnOverlapEnd);
 	
+}
+
+void ABaseUnitCharacter::EnterBuilding(IEnterInterface* object)
+{
+	//Template
+	//object->InterfaceOverlapBegin();
 }
 
 void ABaseUnitCharacter::HealingUnit()

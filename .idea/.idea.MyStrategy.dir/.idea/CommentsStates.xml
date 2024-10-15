@@ -2,10 +2,9 @@
 <project version="4">
   <component name="SolutionCommentsState">
     <snapshots>
-      <stateSnapshot moniker="$PROJECT_DIR$/Source/MyStrategy.Target.cs" tabOrder="1" endOffset="50" displayKind="Render" />
       <stateSnapshot moniker="$PROJECT_DIR$/Source/MyStrategy/MyStrategy.Build.cs" tabOrder="1" endOffset="50" displayKind="Render" />
       <stateSnapshot moniker="$PROJECT_DIR$/Source/MyStrategy/MyStrategy.Build.cs" tabOrder="1" startOffset="357" endOffset="548" />
-      <stateSnapshot moniker="$PROJECT_DIR$/Source/MyStrategy/MyStrategy.Build.cs" tabOrder="1" startOffset="745" endOffset="978" displayKind="Render" />
+      <stateSnapshot moniker="$PROJECT_DIR$/Source/MyStrategy/MyStrategy.Build.cs" tabOrder="1" startOffset="745" endOffset="978" />
     </snapshots>
   </component>
 </project>
