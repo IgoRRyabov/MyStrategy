@@ -8,8 +8,9 @@ void IEnterInterface::InterfaceOverlapEnd(AActor* OtherActor)
 {
 }
 
-void IEnterInterface::AddUnits(AActor* unit)
+bool IEnterInterface::AddUnits(AActor* unit)
 {
+	return false;
 }
 
 void IEnterInterface::MinusUnits(AActor* unit)

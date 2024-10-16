@@ -29,7 +29,7 @@ class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	AObjectForBuilding();
 	
 	FDelegateTest OnNewBuilding; // Событие при строительстве дома
@@ -54,8 +54,15 @@ public:
 
 	virtual void InterfaceOverlapBegin(class AActor* OtherActor) override;
 	virtual void InterfaceOverlapEnd(class AActor* OtherActor) override;
-	virtual void AddUnits(AActor* unit) override;
+	virtual bool AddUnits(AActor* unit) override;
 	virtual void MinusUnits(AActor* unit) override;
+
+	/// 
+	/// @return Здание можно строить?
+	UFUNCTION(Blueprintable)
+	///
+	/// Здание можно строить?
+	bool CanBuild() const;
 protected:
 	virtual void BeginPlay() override;
 	
@@ -86,11 +93,15 @@ protected:
 	/*
 	 * Юниты внутри здания
 	 */
-	TMap<FName, ABaseUnitCharacter*> UnitsInBuiding;
-private:
-	
+	TMap<int, ABaseUnitCharacter*> UnitsInBuiding;
+
+	/// Максимально число юнитов в здании
+	int MaxCountUnitInBuilding = 2;
+	/// Кол-во юнитов в здании
+	int CountUnitInBuilding;
+	/// Количество объектов мешающих постройке здания
+	int CountObjectOverlap = 0;
+	/// Здание построено?
+	bool isBuildingBuild = false;
 };
-
-
-
 

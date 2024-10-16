@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
-	FName unitName = "BaseUnit";
+	int unitId;
 protected:
 	virtual void BeginPlay() override;
 	

@@ -19,6 +19,6 @@ class MYSTRATEGY_API IEnterInterface
 public:
 	virtual void InterfaceOverlapBegin(class AActor* OtherActor);
 	virtual void InterfaceOverlapEnd(class AActor* OtherActor);
-	virtual void AddUnits(class AActor* unit);
+	virtual bool AddUnits(class AActor* unit);
 	virtual void MinusUnits(class AActor* unit);
 };

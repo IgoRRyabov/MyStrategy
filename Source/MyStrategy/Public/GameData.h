@@ -69,7 +69,7 @@ struct FBuildingObjectData : public FTableRowBase
 inline extern bool LeftMouseClick = false;;
 inline extern bool CanSelectUnit = true;
 inline extern int GlobalDataOneDay = 60;
-
+static int globalIdUnit = 0;
 /// 
 /// @param min кол-во необходимчых минут
 /// @return кол-во минут

@@ -50,7 +50,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
 	TMap<FName, UTexture2D*> IconBuild;
 private:
-
+	/// Режим строительства активен?
 	bool isBuild = false;
 	void Building();
 	void CancerBuilding();

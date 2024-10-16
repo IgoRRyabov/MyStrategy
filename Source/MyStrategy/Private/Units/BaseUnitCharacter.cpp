@@ -3,6 +3,7 @@
 #include "ObjectForBuilding.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseUnitCharacter::ABaseUnitCharacter()
 {
@@ -18,13 +19,16 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 	BaseUserWidget = CreateDefaultSubobject<UUnitWidget>("Unit Widget");
 
 	GetCapsuleComponent()->SetCollisionProfileName("UnitCollision");
+
+	unitId = globalIdUnit;
+	globalIdUnit++;
 }
 
 void ABaseUnitCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor->GetClass()->ImplementsInterface(UEnterInterface::StaticClass()))
 	{
-		if(isWantEnterBuilding)
+		if(true)//isWantEnterBuilding)
 		{
 			//Вход в здание
 			auto object = Cast<IEnterInterface>(OtherActor);
@@ -62,8 +66,12 @@ void ABaseUnitCharacter::BeginPlay()
 
 void ABaseUnitCharacter::EnterBuilding(IEnterInterface* object)
 {
-	//Template
-	//object->InterfaceOverlapBegin();
+	if (object->AddUnits(this))
+	{
+		SetActorEnableCollision(false);
+		SetActorHiddenInGame(true);
+		GetCharacterMovement()->StopActiveMovement();
+	}
 }
 
 void ABaseUnitCharacter::HealingUnit()
