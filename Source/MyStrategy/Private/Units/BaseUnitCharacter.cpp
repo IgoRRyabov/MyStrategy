@@ -16,6 +16,8 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 	DecalComponent->SetVisibility(false);
 	
 	BaseUserWidget = CreateDefaultSubobject<UUnitWidget>("Unit Widget");
+
+	GetCapsuleComponent()->SetCollisionProfileName("UnitCollision");
 }
 
 void ABaseUnitCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -54,6 +56,7 @@ void ABaseUnitCharacter::BeginPlay()
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ABaseUnitCharacter::OnOverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &ABaseUnitCharacter::OnOverlapEnd);
+
 	
 }
 
@@ -90,6 +93,7 @@ void ABaseUnitCharacter::SetVisibilityUnitWidget(ESlateVisibility Visibility)
 
 void ABaseUnitCharacter::VisibleDecalSet(bool value) const
 {
+	
 	if(DecalComponent)
 		DecalComponent->SetVisibility(value);
 }
