@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ABaseCameraPawn* GetCameraPawn() {return PawnCamera;}
 
-	FHitResult MouseRaycast(ECollisionChannel CollisionChannel = ECC_MouseRaycast);
+	FHitResult MouseRaycast(ECollisionChannel CollisionChannel) const;
 
 	UBuildComponent* GetBuildComponent() const {return BuildComponent;}
 	UManagerBuildingComponent* GetManagerBuildingComponent() const {return ManagerBuildingComponent;}
@@ -108,4 +108,8 @@ private:
 	void HitMouse();
 	void MoveUnitToPosition();
 	void DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive);
+	
+	///
+	/// Нажатие кнопки для начала строительства
+	void BuildingPressed();
 };

@@ -63,6 +63,12 @@ public:
 	///
 	/// Здание можно строить?
 	bool CanBuild() const;
+
+	// Изменение коллизии обекта
+	void SetCollisionProfile(FName nameCollision) const {StaticMeshComponent->SetCollisionProfileName(nameCollision);
+		BoxComponent->SetCollisionProfileName("OverlapALl");};
+	void SetDefaultCollision() const{StaticMeshComponent->SetCollisionProfileName("BlockAll");
+		BoxComponent->SetCollisionProfileName("BuildCollision");};
 protected:
 	virtual void BeginPlay() override;
 	

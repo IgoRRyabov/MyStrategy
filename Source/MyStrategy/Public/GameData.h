@@ -5,6 +5,7 @@
 #include "BuildingIconWidget.h"
 #include "GameData.generated.h"
 
+
 class AObjectForBuilding;
 
 

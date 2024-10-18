@@ -1,9 +1,6 @@
 #include "BuildComponent.h"
 #include "BuildingWidget.h"
 #include "BasePlayerController.h"
-#include "BuildingWidget.h"
-#include "ManagerBuildingComponent.h"
-#include "GameData.h"
 
 UBuildComponent::UBuildComponent()
 {
@@ -22,5 +19,27 @@ void UBuildComponent::BeginPlay()
 void UBuildComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
+	if (isBuild)
+	{
+		auto const res = PlayerController->MouseRaycast(ECC_GameTraceChannel2);
+		auto const location = res.Location;
+
+		if (res.GetActor())
+			UE_LOG(LogTemp, Log, TEXT("BuildRaycast hit : %s"), *res.GetActor()->GetName());
+		
+		if (ObjectBuilding)
+		{
+			ObjectBuilding->SetCollisionProfile("OverlapAll");
+			ObjectBuilding->SetActorLocation(location);
+		}
+	}
+}
+
+void UBuildComponent::Building()
+{
+	ObjectBuilding = GetWorld()->SpawnActor<AObjectForBuilding>(ObjectForBuild);
+
+	// Активировать режим строительства
+	isBuild = true;
 }

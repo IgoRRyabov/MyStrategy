@@ -25,7 +25,7 @@ void ABasePlayerController::SetupInputComponent()
 	InputComponent->BindAction(FName("MouseClick"), IE_Pressed, this, &ABasePlayerController::MousePressed);
 	InputComponent->BindAction(FName("MouseClick"), IE_Released, this, &ABasePlayerController::MouseReleased);
 	InputComponent->BindAction(FName("MouseRightButton"), IE_Pressed,this,  &ABasePlayerController::MoveUnitToPosition);
-	
+	InputComponent->BindAction(FName("Build"), IE_Pressed, this, &ABasePlayerController::BuildingPressed);
 	//InputComponent->BindAxis("MouseY", this,  &ABasePlayerController::CameraScrollY);
 	//InputComponent->BindAxis("MouseX", this,  &ABasePlayerController::CameraScrollX);
 
@@ -73,7 +73,7 @@ void ABasePlayerController::HitMouse()
 {
 	if(isMousePressed)// && CanSelectUnit)
 	{
-		const auto Hit = MouseRaycast();
+		const auto Hit = MouseRaycast(ECC_GameTraceChannel1);
 		if(Hit.IsValidBlockingHit())
 		{
 			if(Hit.GetActor()->IsA(ABaseUnitCharacter::StaticClass()))
@@ -105,7 +105,7 @@ void ABasePlayerController::MoveUnitToPosition()
 {
 	if(!ActiveCharacter) return;
 	
-	ActiveCharacter->MoveOnPosition(MouseRaycast().Location);
+	ActiveCharacter->MoveOnPosition(MouseRaycast(ECC_GameTraceChannel1).Location);
 }
 
 void ABasePlayerController::DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive)
@@ -127,7 +127,13 @@ void ABasePlayerController::DecalSetVisible(ABaseUnitCharacter* Unit, bool isAct
 	UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s : %d"), *Unit->GetName(), isActive);
 }
 
-FHitResult ABasePlayerController::MouseRaycast(ECollisionChannel CollisionChannel)
+void ABasePlayerController::BuildingPressed()
+{
+	if (!BuildComponent) return;
+	BuildComponent->Building();
+}
+
+FHitResult ABasePlayerController::MouseRaycast(ECollisionChannel CollisionChannel) const
 {
 	FHitResult Hit;
 	GetHitResultUnderCursor(CollisionChannel, true, Hit);

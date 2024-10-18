@@ -31,8 +31,6 @@ public:
 
 	ABasePlayerController* PlayerController;
 
-	void StartBuilding(FName name);
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building Mesh")
 	TArray<TSubclassOf<AObjectForBuilding>> ObjectForBuilding;
 
@@ -49,13 +47,19 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
 	TMap<FName, UTexture2D*> IconBuild;
+
+	///
+	/// Запуск строительства
+	void Building();
+
+protected:
+	/// Тестовая переменная для строительства
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building")
+	TSubclassOf<AObjectForBuilding> ObjectForBuild;
 private:
 	/// Режим строительства активен?
 	bool isBuild = false;
-	void Building();
-	void CancerBuilding();
-	FVector LocationBuild;
-	void ResetBuildingValue();
-	TSubclassOf<AObjectForBuilding> BuildObj;
-	AObjectForBuilding* BuildingRef;
+
+	/// Здание, которое мы строим
+	AObjectForBuilding* ObjectBuilding;
 };
