@@ -60,9 +60,13 @@ public:
 	/// 
 	/// @return Здание можно строить?
 	UFUNCTION(Blueprintable)
-	///
-	/// Здание можно строить?
 	bool CanBuild() const;
+
+	void SetCollisionPorfile(FName CollisinName) const {BoxComponent->SetCollisionProfileName("BuildCollision");
+		StaticMeshComponent->SetCollisionProfileName(CollisinName);}
+	void SetDefaultCollisionProfile() const {BoxComponent->SetCollisionProfileName("BuildCollision");
+		StaticMeshComponent->SetCollisionProfileName("BlockAll");}
+	
 protected:
 	virtual void BeginPlay() override;
 	

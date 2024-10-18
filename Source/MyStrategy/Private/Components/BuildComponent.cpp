@@ -17,10 +17,25 @@ void UBuildComponent::BeginPlay()
 
 	PlayerController = Cast<ABasePlayerController>(GetOwner());
 
+	check(ObjectForBuild);
 }
 
 void UBuildComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
+	if (isBuild)
+	{
+		auto const res = PlayerController->MouseRaycast(ECC_GameTraceChannel4);
+		auto const location = res.Location;
+
+		ObjectBuild->SetActorLocation(location);
+		ObjectBuild->SetCollisionPorfile("OverlapAll");
+	}
+}
+
+void UBuildComponent::Building()
+{
+	ObjectBuild = GetWorld()->SpawnActor<AObjectForBuilding>(ObjectForBuild);
+	isBuild = true;
 }

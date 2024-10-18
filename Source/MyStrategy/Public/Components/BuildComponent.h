@@ -25,13 +25,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building")
+	TSubclassOf<AObjectForBuilding> ObjectForBuild;
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	ABasePlayerController* PlayerController;
-
-	void StartBuilding(FName name);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building Mesh")
 	TArray<TSubclassOf<AObjectForBuilding>> ObjectForBuilding;
@@ -49,13 +49,12 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
 	TMap<FName, UTexture2D*> IconBuild;
+
+	UFUNCTION(BlueprintCallable)
+	void Building();
 private:
 	/// Режим строительства активен?
 	bool isBuild = false;
-	void Building();
-	void CancerBuilding();
-	FVector LocationBuild;
-	void ResetBuildingValue();
-	TSubclassOf<AObjectForBuilding> BuildObj;
-	AObjectForBuilding* BuildingRef;
+
+	AObjectForBuilding* ObjectBuild;
 };
