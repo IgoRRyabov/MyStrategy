@@ -62,4 +62,9 @@ private:
 
 	/// Здание, которое мы строим
 	AObjectForBuilding* ObjectBuilding;
+
+	/// Здание нельзя построить
+	void ErrorBuild();
+	///Здание построено
+	void EndBuilding();
 };

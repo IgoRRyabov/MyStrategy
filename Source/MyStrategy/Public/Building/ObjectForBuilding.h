@@ -60,13 +60,11 @@ public:
 	/// 
 	/// @return Здание можно строить?
 	UFUNCTION(Blueprintable)
-	///
-	/// Здание можно строить?
 	bool CanBuild() const;
 
 	// Изменение коллизии обекта
 	void SetCollisionProfile(FName nameCollision) const {StaticMeshComponent->SetCollisionProfileName(nameCollision);
-		BoxComponent->SetCollisionProfileName("OverlapALl");};
+		BoxComponent->SetCollisionProfileName("OverlapAll");};
 	void SetDefaultCollision() const{StaticMeshComponent->SetCollisionProfileName("BlockAll");
 		BoxComponent->SetCollisionProfileName("BuildCollision");};
 protected:
