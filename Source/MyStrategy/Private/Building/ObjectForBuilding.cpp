@@ -11,7 +11,7 @@ AObjectForBuilding::AObjectForBuilding()
 	UserWidget = CreateDefaultSubobject<UBuildingWidget>("Build Widget");
 	TypeBuild = Default;
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>("Collision Box");
-	BoxComponent->SetCollisionProfileName("BuildCollision");
+	//BoxComponent->SetCollisionProfileName("BuildCollision");
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapBegin);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &AObjectForBuilding::OnOverlapEnd);
 	BoxComponent->SetupAttachment(StaticMeshComponent);

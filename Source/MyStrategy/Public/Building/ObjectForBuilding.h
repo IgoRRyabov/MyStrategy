@@ -63,10 +63,10 @@ public:
 	bool CanBuild() const;
 
 	// Изменение коллизии обекта
-	void SetCollisionProfile(FName nameCollision) const {StaticMeshComponent->SetCollisionProfileName(nameCollision);
-		BoxComponent->SetCollisionProfileName("OverlapAll");};
+	void SetCollisionProfile(FName nameCollision) const {StaticMeshComponent->SetCollisionProfileName("NoCollision");
+		BoxComponent->SetCollisionProfileName(nameCollision);};
 	void SetDefaultCollision() const{StaticMeshComponent->SetCollisionProfileName("BlockAll");
-		BoxComponent->SetCollisionProfileName("BuildCollision");};
+		BoxComponent->SetCollisionProfileName("OverlapAll");};
 protected:
 	virtual void BeginPlay() override;
 	

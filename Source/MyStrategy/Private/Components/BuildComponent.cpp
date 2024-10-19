@@ -45,9 +45,12 @@ void UBuildComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UBuildComponent::Building()
 {
+	if (ObjectBuilding) ErrorBuild();
+	
 	ObjectBuilding = GetWorld()->SpawnActor<AObjectForBuilding>(ObjectForBuild);
 
 	// Активировать режим строительства
+	LeftMouseClick = false;
 	isBuild = true;
 }
 
@@ -61,6 +64,7 @@ void UBuildComponent::ErrorBuild()
 void UBuildComponent::EndBuilding()
 {
 	if (!ObjectBuilding) return;
+	ObjectBuilding->SetDefaultCollision();
 	ObjectBuilding = nullptr;
 	isBuild = false;
 }
