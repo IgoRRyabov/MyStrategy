@@ -1,6 +1,7 @@
 #include "BuildComponent.h"
 #include "BuildingWidget.h"
 #include "BasePlayerController.h"
+#include "ManagerBuildingComponent.h"
 
 UBuildComponent::UBuildComponent()
 {
@@ -64,7 +65,11 @@ void UBuildComponent::ErrorBuild()
 void UBuildComponent::EndBuilding()
 {
 	if (!ObjectBuilding) return;
+	
 	ObjectBuilding->SetDefaultCollision();
+	//ObjectBuilding->OnNewBuilding.AddDynamic(PlayerController->GetManagerBuildingComponent(), &UManagerBuildingComponent::AddCountBuilding);
+	PlayerController->GetManagerBuildingComponent()->UpdateCountBuild(ObjectBuilding->GetTypeBuilding());
+	ObjectBuilding->BiuldingFinish();
 	ObjectBuilding = nullptr;
 	isBuild = false;
 }

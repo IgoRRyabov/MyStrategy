@@ -92,3 +92,13 @@ enum BuildState
 	FinalStage
 };
 
+USTRUCT(Blueprintable)
+struct FGameStat
+{
+	GENERATED_BODY()
+
+	// Информация о построенных сооружениях
+	int sumCountBuild;
+	int countDefaultBuild;
+	int countTownBuild;
+};

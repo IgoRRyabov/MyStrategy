@@ -76,24 +76,24 @@ void ABasePlayerController::HitMouse()
 		const auto Hit = MouseRaycast(ECC_GameTraceChannel1);
 		if(Hit.IsValidBlockingHit())
 		{
-			if(Hit.GetActor()->IsA(ABaseUnitCharacter::StaticClass()))
+			if(Hit.GetActor()->Implements<UActiveSelect>())
 			{
-				auto const PlayerValue = Cast<ABaseUnitCharacter>(Hit.GetActor());
-				//UE_LOG(LogTemp, Log, TEXT("Trace hit Base Unit Character : %s"), *Hit.GetActor()->GetName());
+				auto const Object = Cast<AActor>(Hit.GetActor());
+				UE_LOG(LogTemp, Log, TEXT("Trace hit object = %s"), *Hit.GetActor()->GetName());
 
-				if(ActiveCharacter && PlayerValue == ActiveCharacter)
+				if(ActiveCharacter && Object == ActiveCharacter)
 				{
 					DecalSetVisible(ActiveCharacter, false);
 				}
 				else if(ActiveCharacter)
 				{
 					DecalSetVisible(ActiveCharacter, false);
-					ActiveCharacter = PlayerValue;
-					DecalSetVisible(PlayerValue, true);
+					ActiveCharacter = Object;
+					DecalSetVisible(Object, true);
 				}
 				else
 				{
-					ActiveCharacter = PlayerValue;
+					ActiveCharacter = Object;
 					DecalSetVisible(ActiveCharacter, true);
 				}
 			}
@@ -104,27 +104,31 @@ void ABasePlayerController::HitMouse()
 void ABasePlayerController::MoveUnitToPosition()
 {
 	if(!ActiveCharacter) return;
+
+	if (!ActiveCharacter->IsA(ABaseUnitCharacter::StaticClass())) return;
 	
-	ActiveCharacter->MoveOnPosition(MouseRaycast(ECC_GameTraceChannel1).Location);
+	const auto actCharact = Cast<ABaseUnitCharacter>(ActiveCharacter);
+	actCharact->MoveOnPosition(MouseRaycast(ECC_GameTraceChannel1).Location);
 }
 
-void ABasePlayerController::DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive)
+void ABasePlayerController::DecalSetVisible(AActor* object, bool isActive)
 {
-	Unit->VisibleDecalSet(isActive);
+	auto const obj = Cast<IActiveSelect>(object);
+	obj->VisibleDecalSet(isActive);
 	
 	if(isActive)
 	{
-		SetActiveUnit(Unit);
+		//SetActiveUnit(obj);
 		//Unit->HealingUnit();
-		Unit->SetVisibilityUnitWidget(ESlateVisibility::Visible);
+		//obj->SetVisibilityUnitWidget(ESlateVisibility::Visible);
 	}
 	else
 	{
-		SetDeactiveUnit();
-		Unit->SetVisibilityUnitWidget(ESlateVisibility::Hidden);
+		//SetDeactiveUnit();
+		//obj->SetVisibilityUnitWidget(ESlateVisibility::Hidden);
 		ActiveCharacter = nullptr;
 	}
-	UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s : %d"), *Unit->GetName(), isActive);
+	UE_LOG(LogTemp, Log, TEXT("Visible Decal Player : %s : %d"), *object->GetName(), isActive);
 }
 
 void ABasePlayerController::BuildingPressed()

@@ -19,6 +19,8 @@ class MYSTRATEGY_API ABasePlayerController : public APlayerController
 public:
 	ABasePlayerController();
 
+	FGameStat GameStat;
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category= "Widget Event")
 	void AddVertBoxElement(UBuildingWidget* UserWidget);
 	
@@ -32,7 +34,7 @@ public:
 	void OnDeath();
 
 	UFUNCTION(BlueprintCallable)
-	ABaseUnitCharacter* GetActiveCharacter() {return ActiveCharacter;}
+	ABaseUnitCharacter* GetActiveCharacter() {return Cast<ABaseUnitCharacter>(ActiveCharacter);}
 	
 	UFUNCTION(BlueprintCallable)
 	ABaseCameraPawn* GetCameraPawn() {return PawnCamera;}
@@ -55,7 +57,7 @@ protected:
 	FVector GetMouseClickPosition() {return MouseClickPosition;}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Active Unit")
-	ABaseUnitCharacter* ActiveCharacter;
+	AActor* ActiveCharacter;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Active Unit")
 	UParticleSystem* EmitterMousePosition;
@@ -78,8 +80,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	bool isActiveUnits() {return (ActiveCharacter) ? true : false;}
 	
-	UFUNCTION(BlueprintCallable)
-	float ActiveUnitHealth() {return ActiveCharacter ? ActiveCharacter->GetPercentHealthUnit() : 0;};
+	//UFUNCTION(BlueprintCallable)
+	//float ActiveUnitHealth() {return ActiveCharacter ? ActiveCharacter->GetPercentHealthUnit() : 0;};
 private:
 	
 	virtual void SetupInputComponent() override;
@@ -107,7 +109,7 @@ private:
 	FVector MouseClickPosition;
 	void HitMouse();
 	void MoveUnitToPosition();
-	void DecalSetVisible(ABaseUnitCharacter* Unit, bool isActive);
+	void DecalSetVisible(AActor* object, bool isActive);
 	
 	///
 	/// Нажатие кнопки для начала строительства

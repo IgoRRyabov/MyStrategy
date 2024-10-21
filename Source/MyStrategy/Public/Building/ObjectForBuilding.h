@@ -21,20 +21,20 @@ struct SResourseForBuilding
 	int Stone;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateTest, ETypeBuild, TypeBuild);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateBuilding, ETypeBuild, TypeBuild);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateResouse, ETypeResourse, TypeResourse, float, value);
 
 UCLASS(Abstract)
-class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface
+class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface, public IActiveSelect
 {
 	GENERATED_BODY()
 	
 public:
 	AObjectForBuilding();
 	
-	FDelegateTest OnNewBuilding; // Событие при строительстве дома
+	FDelegateBuilding OnNewBuilding; // Событие при строительстве дома
 	FOnUpdateResouse OnUpdateResouse; // Событие добычи ресурсов
-
+	
 	/*
 	 * Получение Widget'а здания
 	 */
@@ -57,6 +57,9 @@ public:
 	virtual bool AddUnits(AActor* unit) override;
 	virtual void MinusUnits(AActor* unit) override;
 
+	virtual void SetActive() override;
+	virtual void DeActive() override;
+	virtual void VisibleDecalSet(bool value) override;
 	/// 
 	/// @return Здание можно строить?
 	UFUNCTION(Blueprintable)
@@ -67,6 +70,7 @@ public:
 		BoxComponent->SetCollisionProfileName(nameCollision);};
 	void SetDefaultCollision() const{StaticMeshComponent->SetCollisionProfileName("BlockAll");
 		BoxComponent->SetCollisionProfileName("OverlapAll");};
+	void BiuldingFinish();
 protected:
 	virtual void BeginPlay() override;
 	

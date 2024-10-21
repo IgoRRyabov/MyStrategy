@@ -93,16 +93,18 @@ void ABaseUnitCharacter::HealingUnit()
 	}
 }
 
+void ABaseUnitCharacter::VisibleDecalSet(bool value)
+{
+	IActiveSelect::VisibleDecalSet(value);
+
+	if(DecalComponent)
+		DecalComponent->SetVisibility(value);
+}
+
 void ABaseUnitCharacter::SetVisibilityUnitWidget(ESlateVisibility Visibility)
 {
 	if(BaseUserWidget)
 		BaseUserWidget->SlateVisibility = Visibility;
 }
 
-void ABaseUnitCharacter::VisibleDecalSet(bool value) const
-{
-	
-	if(DecalComponent)
-		DecalComponent->SetVisibility(value);
-}
 

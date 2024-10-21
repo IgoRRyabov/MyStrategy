@@ -4,12 +4,13 @@
 #include "UnitWidget.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
+#include "Interface/ActiveSelect.h"
 #include "BaseUnitCharacter.generated.h"
 
 class UDecalComponent;
 class UWidget;
 UCLASS(Abstract)
-class MYSTRATEGY_API ABaseUnitCharacter : public ACharacter
+class MYSTRATEGY_API ABaseUnitCharacter : public ACharacter, public IActiveSelect
 {
 	GENERATED_BODY()
 
@@ -23,7 +24,7 @@ public:
 	void HealingUnit();
 	
 	float GetPercentHealthUnit() const {return HealthUnit/MaxHealthUnit;};
-	void VisibleDecalSet(bool value) const;
+	virtual void VisibleDecalSet(bool value) override;
 
 	void SetVisibilityUnitWidget(ESlateVisibility Visibility);
 

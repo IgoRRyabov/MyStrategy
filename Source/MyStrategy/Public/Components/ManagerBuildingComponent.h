@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BasePlayerController.h"
 #include "GameData.h"
 #include "Components/ActorComponent.h"
 #include "ManagerBuildingComponent.generated.h"
@@ -18,7 +19,9 @@ public:
 
 	UFUNCTION()
 	void AddCountBuilding(ETypeBuild TypeBuilding);
-	
+	void UpdateCountBuild(ETypeBuild type);
+
+	ABasePlayerController* PlayerController;
 protected:
 	virtual void BeginPlay() override;
 
@@ -27,6 +30,5 @@ private:
 	// Кол-во построенных зданий
 	int SumCountBuildint = 0;
 	int TownHallCountBuildint = 0;
-	
 	
 };
