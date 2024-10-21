@@ -5,6 +5,7 @@
 #include "Materials/Material.h"
 #include "GameFramework/Actor.h"
 #include "GameData.h"
+#include "Interface/BuildInterface.h"
 #include "Interface/EnterInterface.h"
 #include "ObjectForBuilding.generated.h"
 
@@ -25,7 +26,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateBuilding, ETypeBuild, TypeB
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateResouse, ETypeResourse, TypeResourse, float, value);
 
 UCLASS(Abstract)
-class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface, public IActiveSelect
+class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface, public IActiveSelect, public IBuildInterface
 {
 	GENERATED_BODY()
 	
@@ -52,14 +53,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	//EnterInterface function
 	virtual void InterfaceOverlapBegin(class AActor* OtherActor) override;
 	virtual void InterfaceOverlapEnd(class AActor* OtherActor) override;
 	virtual bool AddUnits(AActor* unit) override;
 	virtual void MinusUnits(AActor* unit) override;
 
+	//ActiveSelect function
 	virtual void SetActive() override;
 	virtual void DeActive() override;
 	virtual void VisibleDecalSet(bool value) override;
+
+	//BuildInterface function
+	virtual void RequestResources(ETypeResourse & resType, int & resCount) override;
+	
 	/// 
 	/// @return Здание можно строить?
 	UFUNCTION(Blueprintable)
@@ -71,6 +78,9 @@ public:
 	void SetDefaultCollision() const{StaticMeshComponent->SetCollisionProfileName("BlockAll");
 		BoxComponent->SetCollisionProfileName("OverlapAll");};
 	void BiuldingFinish();
+
+	void UpdateWarehouse(ETypeResourse & resType, int & resCount);
+	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -96,9 +106,14 @@ protected:
 	 * Ресурсы для строительства
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resourse from building")
-	TMap<TEnumAsByte<ETypeResourse>, int> ResourseForBuilding;
+	TMap<ETypeResourse, int> ResourseForBuilding;
 
 	/*
+	 * Ресурсы внутри здания
+	 */
+	TMap<ETypeResourse, int> Warehouse;
+	
+	/* 
 	 * Юниты внутри здания
 	 */
 	TMap<int, ABaseUnitCharacter*> UnitsInBuiding;

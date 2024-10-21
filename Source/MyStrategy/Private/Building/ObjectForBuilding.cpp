@@ -20,7 +20,26 @@ AObjectForBuilding::AObjectForBuilding()
 void AObjectForBuilding::BiuldingFinish()
 {
 	isBuildingBuild = true;
-	OnNewBuilding.Broadcast(GetTypeBuilding());
+	for (TTuple<ETypeResourse, int> ForBuilding : ResourseForBuilding)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Count ResourseForBuilding: %d"), ForBuilding.Value);
+	}
+}
+
+void AObjectForBuilding::UpdateWarehouse(ETypeResourse & resType, int & resCount)
+{
+	if(Warehouse.Find(resType))
+	{
+		Warehouse.Emplace(resType, resCount + *Warehouse.Find(resType));
+		UE_LOG(LogTemp, Log, TEXT("Warehouse count ==  %d"), *Warehouse.Find(resType));
+		resCount = 0;
+	}
+	else
+	{
+		Warehouse.Emplace(resType, resCount);
+		UE_LOG(LogTemp, Log, TEXT("Warehouse count ==  %d"), *Warehouse.Find(resType));
+		resCount = 0;
+	}
 }
 
 void AObjectForBuilding::BeginPlay()
@@ -113,6 +132,13 @@ void AObjectForBuilding::DeActive()
 void AObjectForBuilding::VisibleDecalSet(bool value)
 {
 	IActiveSelect::VisibleDecalSet(value);
+}
+
+void AObjectForBuilding::RequestResources(ETypeResourse & resType, int & resCount)
+{
+	IBuildInterface::RequestResources(resType, resCount);
+
+	UpdateWarehouse(resType, resCount);
 }
 
 bool AObjectForBuilding::CanBuild() const

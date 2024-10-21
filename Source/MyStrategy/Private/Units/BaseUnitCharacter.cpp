@@ -1,5 +1,5 @@
 #include "BaseUnitCharacter.h"
-
+#include "GameData.h"
 #include "ObjectForBuilding.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
@@ -32,9 +32,17 @@ void ABaseUnitCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedCom
 		{
 			//Вход в здание
 			auto object = Cast<IEnterInterface>(OtherActor);
-			EnterBuilding(object);
+			if(EnterBuilding(object))
+			{
+				if (OtherActor->Implements<UBuildInterface>())
+				{
+					const auto obj = Cast<IBuildInterface>(OtherActor);
+					obj->RequestResources(typeRes, countRes);
+					UE_LOG(LogTemp, Log, TEXT("countRes unit ==  : %d"), countRes);
+				}
+			}
 		}
-		UE_LOG(LogTemp, Log, TEXT("Interface find in  : %s"), *OtherComp->GetName());
+		//UE_LOG(LogTemp, Log, TEXT("Interface find in  : %s"), *OtherComp->GetName());
 	}
 }
 
@@ -48,6 +56,10 @@ void ABaseUnitCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Test
+	typeRes = ETypeResourse::Gold;
+	countRes = 150;
+	
 	//check(BaseUserWidget);
 	if(BaseUserWidget)
 	{
@@ -64,14 +76,16 @@ void ABaseUnitCharacter::BeginPlay()
 	
 }
 
-void ABaseUnitCharacter::EnterBuilding(IEnterInterface* object)
+bool ABaseUnitCharacter::EnterBuilding(IEnterInterface* object)
 {
 	if (object->AddUnits(this))
 	{
 		SetActorEnableCollision(false);
 		SetActorHiddenInGame(true);
 		GetCharacterMovement()->StopActiveMovement();
+		return true;
 	}
+	return false;
 }
 
 void ABaseUnitCharacter::HealingUnit()

@@ -79,7 +79,7 @@ void ABasePlayerController::HitMouse()
 			if(Hit.GetActor()->Implements<UActiveSelect>())
 			{
 				auto const Object = Cast<AActor>(Hit.GetActor());
-				UE_LOG(LogTemp, Log, TEXT("Trace hit object = %s"), *Hit.GetActor()->GetName());
+				
 
 				if(ActiveCharacter && Object == ActiveCharacter)
 				{
@@ -97,6 +97,7 @@ void ABasePlayerController::HitMouse()
 					DecalSetVisible(ActiveCharacter, true);
 				}
 			}
+			//UE_LOG(LogTemp, Log, TEXT("Active object = %s"), *ActiveCharacter->GetName());
 		}
 	}
 }

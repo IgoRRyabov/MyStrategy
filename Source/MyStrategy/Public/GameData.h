@@ -38,7 +38,7 @@ struct FResourse
 };
 
 UENUM()
-enum ETypeResourse
+enum class ETypeResourse
 {
 	BaseResourse = 0,
 	Gold,
@@ -63,7 +63,7 @@ struct FBuildingObjectData : public FTableRowBase
 	FName NameBuilding;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<TEnumAsByte<ETypeResourse>, int> ResourseForBuilding;
+	TMap<ETypeResourse, int> ResourseForBuilding;
 	
 };
 

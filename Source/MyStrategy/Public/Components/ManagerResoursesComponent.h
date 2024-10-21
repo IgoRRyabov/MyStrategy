@@ -27,14 +27,14 @@ public:
 	UFUNCTION()
 	void UpdateResourse(ETypeResourse TRes, float value);
 	UFUNCTION()
-	bool GetResourse(TMap<TEnumAsByte<ETypeResourse>, int> PRes);
+	bool GetResourse(TMap<ETypeResourse, int> PRes);
 	
 protected:
 	virtual void BeginPlay() override;
 
 	// Все ресурсы игрока
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<TEnumAsByte<ETypeResourse>, int> PlayerResourse;
+	TMap<ETypeResourse, int> PlayerResourse;
 private:
 	/*кол-во золото у игрока*/
 	int CountGold = 100;

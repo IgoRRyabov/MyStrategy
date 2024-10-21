@@ -9,6 +9,8 @@
 
 class UDecalComponent;
 class UWidget;
+enum class ETypeResourse;
+
 UCLASS(Abstract)
 class MYSTRATEGY_API ABaseUnitCharacter : public ACharacter, public IActiveSelect
 {
@@ -39,6 +41,9 @@ public:
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
 	int unitId;
+
+	
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -72,5 +77,9 @@ private:
 	/*
 	 * Персонаж входит в здание
 	 */
-	void EnterBuilding(class IEnterInterface* object);
+	bool EnterBuilding(class IEnterInterface* object);
+
+	//Переносимые персонажем ресурсы
+	ETypeResourse typeRes;
+	int countRes;
 };
