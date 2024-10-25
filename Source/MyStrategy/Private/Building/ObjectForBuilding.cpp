@@ -24,6 +24,8 @@ void AObjectForBuilding::BiuldingFinish()
 	{
 		UE_LOG(LogTemp, Log, TEXT("Count ResourseForBuilding: %d"), ForBuilding.Value);
 	}
+
+	ResourceExtraction();
 }
 
 void AObjectForBuilding::UpdateWarehouse(ETypeResourse & resType, int & resCount)
@@ -45,6 +47,16 @@ void AObjectForBuilding::UpdateWarehouse(ETypeResourse & resType, int & resCount
 void AObjectForBuilding::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (TTuple<ETypeResourse, int> countres : Warehouse)
+	{
+		countResources += countres.Value;
+	}
+
+	if (countResources > maxCountResource)
+		{UE_LOG(LogTemp, Log, TEXT("Count resources %d > maxCountResource %d"), countResources, maxCountResource);}
+	else
+		UE_LOG(LogTemp, Log, TEXT("Count resources %d <= maxCountResource %d"), countResources, maxCountResource);
 }
 
 void AObjectForBuilding::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -100,9 +112,12 @@ bool AObjectForBuilding::AddUnits(AActor* unit)
 			{
 				UnitsInBuiding.FindOrAdd(unitEnter->unitId, unitEnter);
 			}
+			CanExtractResource = true;
+			ResourceExtraction();
 			return true;
 		}
 	}
+	
 	return false;
 }
 
@@ -116,6 +131,10 @@ void AObjectForBuilding::MinusUnits(AActor* unit)
 		auto unitEnter = Cast<ABaseUnitCharacter>(unit);
 		CountUnitInBuilding = UnitsInBuiding.Num();
 		UnitsInBuiding.Remove(unitEnter->unitId);
+		if(UnitsInBuiding.IsEmpty())
+		{
+			CanExtractResource = false;
+		}
 	}
 }
 
@@ -139,6 +158,39 @@ void AObjectForBuilding::RequestResources(ETypeResourse & resType, int & resCoun
 	IBuildInterface::RequestResources(resType, resCount);
 
 	UpdateWarehouse(resType, resCount);
+}
+
+void AObjectForBuilding::ResourceExtraction()
+{
+	IResourceExtractionInterface::ResourceExtraction();
+
+	if (!isBuildingBuild) return;
+
+	if (CanExtractResource)
+		GetWorld()->GetTimerManager().SetTimer(ExtractionResourceTimer,this, &AObjectForBuilding::AddResource, 1.f, false);
+}
+
+void AObjectForBuilding::AddResource()
+{
+	IResourceExtractionInterface::AddResource();
+	//if (!countExtractionResource) return;
+	auto res = countExtractionResource;
+	if (Warehouse.Find(ExtractionResource)!= nullptr)
+	{
+		res += *Warehouse.Find(ExtractionResource);
+	}
+
+	auto countRes = countResources + countExtractionResource;
+	if (countRes < maxCountResource)
+	{
+		countResources += countExtractionResource;
+		Warehouse.Emplace(ExtractionResource, res);
+	}
+	
+	UE_LOG(LogTemp, Log, TEXT("Count extraxtin res : %d"), *Warehouse.Find(ExtractionResource));
+	UE_LOG(LogTemp, Log, TEXT("Count res in build ==  : %d"), countResources);
+	
+	ResourceExtraction();
 }
 
 bool AObjectForBuilding::CanBuild() const

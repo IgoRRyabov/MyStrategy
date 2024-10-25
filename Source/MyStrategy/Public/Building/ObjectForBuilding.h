@@ -7,6 +7,7 @@
 #include "GameData.h"
 #include "Interface/BuildInterface.h"
 #include "Interface/EnterInterface.h"
+#include "Interface/ResourceExtractionInterface.h"
 #include "ObjectForBuilding.generated.h"
 
 class ABasePlayerController;
@@ -26,7 +27,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateBuilding, ETypeBuild, TypeB
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateResouse, ETypeResourse, TypeResourse, float, value);
 
 UCLASS(Abstract)
-class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface, public IActiveSelect, public IBuildInterface
+class MYSTRATEGY_API AObjectForBuilding : public AActor, public IEnterInterface, public IActiveSelect, public IBuildInterface,
+public IResourceExtractionInterface
 {
 	GENERATED_BODY()
 	
@@ -66,7 +68,10 @@ public:
 
 	//BuildInterface function
 	virtual void RequestResources(ETypeResourse & resType, int & resCount) override;
-	
+
+	// ResourceExtractionInterface function
+	virtual void ResourceExtraction() override;
+	virtual void AddResource() override;
 	/// 
 	/// @return Здание можно строить?
 	UFUNCTION(Blueprintable)
@@ -105,13 +110,18 @@ protected:
 	/*
 	 * Ресурсы для строительства
 	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resourse from building")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resource from building")
 	TMap<ETypeResourse, int> ResourseForBuilding;
 
 	/*
 	 * Ресурсы внутри здания
 	 */
 	TMap<ETypeResourse, int> Warehouse;
+	/// Максимальное число ресурсов в здании
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resources")
+	int maxCountResource = 150;
+	/// Количество ресурсов внутри здания
+	int countResources;
 	
 	/* 
 	 * Юниты внутри здания
@@ -126,5 +136,16 @@ protected:
 	int CountObjectOverlap = 0;
 	/// Здание построено?
 	bool isBuildingBuild = false;
+
+	///Ресурс для добычи
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resources")
+	ETypeResourse ExtractionResource;
+	///Количество добываемого ресурса
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Resources")
+	int countExtractionResource = 0;
+	/// Таймер добычи ресурсов
+	FTimerHandle ExtractionResourceTimer;
+	/// Здание может добывать ресурсы?
+	bool CanExtractResource = false;
 };
 
