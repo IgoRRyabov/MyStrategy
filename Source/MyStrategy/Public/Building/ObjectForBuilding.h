@@ -71,7 +71,7 @@ public:
 
 	// ResourceExtractionInterface function
 	virtual void ResourceExtraction() override;
-	virtual void AddResource() override;
+	virtual void AddResource(ETypeResourse & resType, int & resCount) override;
 	/// 
 	/// @return Здание можно строить?
 	UFUNCTION(Blueprintable)
@@ -85,7 +85,8 @@ public:
 	void BiuldingFinish();
 
 	void UpdateWarehouse(ETypeResourse & resType, int & resCount);
-	
+	/// Проверка пустого места в здании
+	bool GetFreeSpace() const {return FreeSpace;};
 protected:
 	virtual void BeginPlay() override;
 	
@@ -147,5 +148,9 @@ protected:
 	FTimerHandle ExtractionResourceTimer;
 	/// Здание может добывать ресурсы?
 	bool CanExtractResource = false;
+	/// В здании есть место?
+	bool FreeSpace = true;
+
+	void StartAddResource();
 };
 

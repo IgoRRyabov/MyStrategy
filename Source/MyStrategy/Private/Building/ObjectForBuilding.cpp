@@ -22,7 +22,7 @@ void AObjectForBuilding::BiuldingFinish()
 	isBuildingBuild = true;
 	for (TTuple<ETypeResourse, int> ForBuilding : ResourseForBuilding)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Count ResourseForBuilding: %d"), ForBuilding.Value);
+		UE_LOG(LogTemp, Log, TEXT("Count Resource For Building: %d"), ForBuilding.Value);
 	}
 
 	ResourceExtraction();
@@ -30,18 +30,54 @@ void AObjectForBuilding::BiuldingFinish()
 
 void AObjectForBuilding::UpdateWarehouse(ETypeResourse & resType, int & resCount)
 {
-	if(Warehouse.Find(resType))
+	if (!GetFreeSpace()) return;
+
+	auto rCount = resCount;
+	auto val = resCount + countResources;
+	if (val > maxCountResource)
 	{
-		Warehouse.Emplace(resType, resCount + *Warehouse.Find(resType));
-		UE_LOG(LogTemp, Log, TEXT("Warehouse count ==  %d"), *Warehouse.Find(resType));
-		resCount = 0;
+		FreeSpace = false;
+		countResources = maxCountResource;
+		resCount = val - maxCountResource;
+		val = rCount - resCount;
 	}
 	else
 	{
-		Warehouse.Emplace(resType, resCount);
-		UE_LOG(LogTemp, Log, TEXT("Warehouse count ==  %d"), *Warehouse.Find(resType));
-		resCount = 0;
+		countResources += resCount;
 	}
+
+	if (Warehouse.Find(resType))
+	{
+		if (FreeSpace)
+		{
+			Warehouse.Emplace(resType, *Warehouse.Find(resType) + resCount);
+			resCount = 0;
+		}
+		else
+			{
+				Warehouse.Emplace(resType, *Warehouse.Find(resType) + val);
+			}
+	}
+	else
+	{
+		if (FreeSpace)
+		{
+			Warehouse.Emplace(resType, resCount);
+			resCount = 0;
+		}
+		else
+		{
+			Warehouse.Emplace(resType, val);
+		}
+	}
+	
+	UE_LOG(LogTemp, Log, TEXT("!!! Warehouse count  ==  : %d !!!"), *Warehouse.Find(resType));
+	UE_LOG(LogTemp, Log, TEXT("Count all res in build ==  : %d"), countResources);
+	if (FreeSpace)
+	{
+		ResourceExtraction();
+	}
+	
 }
 
 void AObjectForBuilding::BeginPlay()
@@ -56,7 +92,18 @@ void AObjectForBuilding::BeginPlay()
 	if (countResources > maxCountResource)
 		{UE_LOG(LogTemp, Log, TEXT("Count resources %d > maxCountResource %d"), countResources, maxCountResource);}
 	else
+	{
+		FreeSpace = true;
 		UE_LOG(LogTemp, Log, TEXT("Count resources %d <= maxCountResource %d"), countResources, maxCountResource);
+	}
+	
+}
+
+void AObjectForBuilding::StartAddResource()
+{
+	auto resType = ExtractionResource;
+	auto res = countExtractionResource;
+	AddResource(resType, res);
 }
 
 void AObjectForBuilding::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -157,7 +204,8 @@ void AObjectForBuilding::RequestResources(ETypeResourse & resType, int & resCoun
 {
 	IBuildInterface::RequestResources(resType, resCount);
 
-	UpdateWarehouse(resType, resCount);
+	if (GetFreeSpace())
+		UpdateWarehouse(resType, resCount);
 }
 
 void AObjectForBuilding::ResourceExtraction()
@@ -167,31 +215,17 @@ void AObjectForBuilding::ResourceExtraction()
 	if (!isBuildingBuild) return;
 
 	if (CanExtractResource)
-		GetWorld()->GetTimerManager().SetTimer(ExtractionResourceTimer,this, &AObjectForBuilding::AddResource, 1.f, false);
+		GetWorld()->GetTimerManager().SetTimer(ExtractionResourceTimer,this, &AObjectForBuilding::StartAddResource, 1.f, false);
 }
 
-void AObjectForBuilding::AddResource()
+void AObjectForBuilding::AddResource(ETypeResourse & resType, int & resCount)
 {
-	IResourceExtractionInterface::AddResource();
-	//if (!countExtractionResource) return;
-	auto res = countExtractionResource;
-	if (Warehouse.Find(ExtractionResource)!= nullptr)
-	{
-		res += *Warehouse.Find(ExtractionResource);
-	}
+	IResourceExtractionInterface::AddResource(resType, resCount);
 
-	auto countRes = countResources + countExtractionResource;
-	if (countRes < maxCountResource)
-	{
-		countResources += countExtractionResource;
-		Warehouse.Emplace(ExtractionResource, res);
-	}
-	
-	UE_LOG(LogTemp, Log, TEXT("Count extraxtin res : %d"), *Warehouse.Find(ExtractionResource));
-	UE_LOG(LogTemp, Log, TEXT("Count res in build ==  : %d"), countResources);
-	
-	ResourceExtraction();
+	UpdateWarehouse(resType, resCount);
 }
+
+
 
 bool AObjectForBuilding::CanBuild() const
 {

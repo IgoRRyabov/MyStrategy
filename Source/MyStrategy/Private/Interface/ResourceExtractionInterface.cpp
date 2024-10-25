@@ -5,6 +5,6 @@ void IResourceExtractionInterface::ResourceExtraction()
 {
 }
 
-void IResourceExtractionInterface::AddResource()
+void IResourceExtractionInterface::AddResource(ETypeResourse & resType, int & resCount)
 {
 }

@@ -28,20 +28,8 @@ void ABaseUnitCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedCom
 {
 	if(OtherActor->GetClass()->ImplementsInterface(UEnterInterface::StaticClass()))
 	{
-		if(true)//isWantEnterBuilding)
-		{
-			//Вход в здание
-			auto object = Cast<IEnterInterface>(OtherActor);
-			if(EnterBuilding(object))
-			{
-				if (OtherActor->Implements<UBuildInterface>())
-				{
-					const auto obj = Cast<IBuildInterface>(OtherActor);
-					obj->RequestResources(typeRes, countRes);
-					UE_LOG(LogTemp, Log, TEXT("countRes unit ==  : %d"), countRes);
-				}
-			}
-		}
+		CollisionObject = OtherActor;
+		EnterBuildUnit();
 		//UE_LOG(LogTemp, Log, TEXT("Interface find in  : %s"), *OtherComp->GetName());
 	}
 }
@@ -52,13 +40,39 @@ void ABaseUnitCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, 
 	
 }
 
+void ABaseUnitCharacter::EnterBuildUnit()
+{
+	if (!CollisionObject) return;
+	if (ObjectEnter != CollisionObject) return;
+	
+	if(isWantEnterBuilding)
+	{
+		//Вход в здание
+		if (!CollisionObject->Implements<UEnterInterface>()) return;
+		
+		auto object = Cast<IEnterInterface>(CollisionObject);
+		if(EnterBuilding(object))
+		{
+			if (CollisionObject->Implements<UBuildInterface>())
+			{
+				const auto obj = Cast<IBuildInterface>(CollisionObject);
+				if (countRes)
+				{
+					obj->RequestResources(typeRes, countRes);
+					UE_LOG(LogTemp, Log, TEXT("!!!!!   countRes unit ==  : %d   !!!!!"), countRes);
+				}
+			}
+		}
+	}
+}
+
 void ABaseUnitCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	//Test
 	typeRes = ETypeResourse::Gold;
-	countRes = 150;
+	countRes = 5;
 	
 	//check(BaseUserWidget);
 	if(BaseUserWidget)

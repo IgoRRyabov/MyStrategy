@@ -42,8 +42,11 @@ public:
 	
 	int unitId;
 
-	
+	// Персонжу необходимо войти в здание
+	void SetIsWantEnterBuilding(bool isVal) {isWantEnterBuilding = isVal;}
 
+	void EnterBuildUnit();
+	AActor* ObjectEnter;
 protected:
 	virtual void BeginPlay() override;
 	
@@ -82,4 +85,6 @@ private:
 	//Переносимые персонажем ресурсы
 	ETypeResourse typeRes;
 	int countRes;
+
+	AActor* CollisionObject;
 };

@@ -109,7 +109,20 @@ void ABasePlayerController::MoveUnitToPosition()
 	if (!ActiveCharacter->IsA(ABaseUnitCharacter::StaticClass())) return;
 	
 	const auto actCharact = Cast<ABaseUnitCharacter>(ActiveCharacter);
-	actCharact->MoveOnPosition(MouseRaycast(ECC_GameTraceChannel1).Location);
+	const auto hit = MouseRaycast(ECC_GameTraceChannel1);
+	if (hit.GetActor()->Implements<UEnterInterface>())
+	{
+		actCharact->SetIsWantEnterBuilding(true);
+		actCharact->ObjectEnter = hit.GetActor();
+		actCharact->EnterBuildUnit();
+		UE_LOG(LogTemp, Log, TEXT("Enter in build : %s"), *hit.GetActor()->GetName());
+	}
+	else
+	{
+		actCharact->SetIsWantEnterBuilding(false);
+		UE_LOG(LogTemp, Log, TEXT("No enter in build : %s"), *hit.GetActor()->GetName());
+	}
+	actCharact->MoveOnPosition(hit.Location);
 }
 
 void ABasePlayerController::DecalSetVisible(AActor* object, bool isActive)
