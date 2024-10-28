@@ -37,11 +37,6 @@ public:
 	
 	FDelegateBuilding OnNewBuilding; // Событие при строительстве дома
 	FOnUpdateResouse OnUpdateResouse; // Событие добычи ресурсов
-	
-	/*
-	 * Получение Widget'а здания
-	 */
-	UBuildingWidget* GetUserWidget() const {return UserWidget;}
 	/*
 	 * Получить тип здания
 	 */
@@ -99,8 +94,6 @@ protected:
 	UBoxComponent* BoxComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Material Build object")
 	TArray<UMaterial*> MaterialBuilding;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Interface Build")
-	UBuildingWidget* UserWidget;
 
 	/*
 	 *Тип здания

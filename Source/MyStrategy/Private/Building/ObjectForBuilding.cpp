@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Building/ObjectForBuilding.h"
-#include "BuildingWidget.h"
 
 AObjectForBuilding::AObjectForBuilding()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Build Mesh");
 	RootComponent = StaticMeshComponent;
-	UserWidget = CreateDefaultSubobject<UBuildingWidget>("Build Widget");
 	TypeBuild = Default;
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>("Collision Box");
 	//BoxComponent->SetCollisionProfileName("BuildCollision");
@@ -224,8 +222,6 @@ void AObjectForBuilding::AddResource(ETypeResourse & resType, int & resCount)
 
 	UpdateWarehouse(resType, resCount);
 }
-
-
 
 bool AObjectForBuilding::CanBuild() const
 {

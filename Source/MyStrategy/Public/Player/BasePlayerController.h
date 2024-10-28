@@ -21,9 +21,6 @@ public:
 
 	FGameStat GameStat;
 	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category= "Widget Event")
-	void AddVertBoxElement(UBuildingWidget* UserWidget);
-	
 	UFUNCTION(BlueprintImplementableEvent, Category="CustomEvent")
 	void SetActiveUnit(ABaseUnitCharacter* ActUnit);
 	

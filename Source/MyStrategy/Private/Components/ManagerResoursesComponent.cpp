@@ -4,8 +4,7 @@
 
 UManagerResoursesComponent::UManagerResoursesComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;;
-
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UManagerResoursesComponent::UpdateResourse(ETypeResourse TRes, float value)
@@ -20,17 +19,13 @@ bool UManagerResoursesComponent::GetResourse(TMap<ETypeResourse, int> PRes)
 		//UE_LOG(LogTemp, Warning, TEXT("Error !!!!"));
 		return false;	
 	}
-	//if(*PRes.Find(Gold) > *PlayerResourse.Find(Gold)) return false;
-	//*PlayerResourse.Find(Gold) = *PlayerResourse.Find(Gold) - *PRes.Find(Gold);
 	
-	//UE_LOG(LogTemp, Log, TEXT("CountGoldNow : %d"), *PlayerResourse.Find(Gold));
 	return true;
 }
 
 void UManagerResoursesComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 

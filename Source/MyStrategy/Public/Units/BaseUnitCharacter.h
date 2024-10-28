@@ -1,8 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UnitWidget.h"
-#include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "Interface/ActiveSelect.h"
 #include "BaseUnitCharacter.generated.h"
@@ -61,9 +59,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health Unit")
 	float ArmorUnit = 100;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Widget Unit")
-	UUnitWidget* BaseUserWidget;
 private:
 	
 	float MaxHealthUnit = 100;

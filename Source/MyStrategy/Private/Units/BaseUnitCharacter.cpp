@@ -15,8 +15,6 @@ ABaseUnitCharacter::ABaseUnitCharacter()
 	DecalComponent->SetRelativeScale3D(FVector{3,3,3});
 	DecalComponent->DecalSize = FVector{10,20,20};
 	DecalComponent->SetVisibility(false);
-	
-	BaseUserWidget = CreateDefaultSubobject<UUnitWidget>("Unit Widget");
 
 	GetCapsuleComponent()->SetCollisionProfileName("UnitCollision");
 
@@ -74,20 +72,8 @@ void ABaseUnitCharacter::BeginPlay()
 	typeRes = ETypeResourse::Gold;
 	countRes = 5;
 	
-	//check(BaseUserWidget);
-	if(BaseUserWidget)
-	{
-		BaseUserWidget->HealthUnit = HealthUnit / MaxHealthUnit;
-		BaseUserWidget->ArmorUnit = ArmorUnit / MaxArmorUnit;
-		BaseUserWidget->SlateVisibility = ESlateVisibility::Hidden;
-		UE_LOG(LogTemp, Log, TEXT("User Widget : %s"), *BaseUserWidget->GetName());
-		BaseUserWidget->SetOwnerUnit(this);
-	}
-
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ABaseUnitCharacter::OnOverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &ABaseUnitCharacter::OnOverlapEnd);
-
-	
 }
 
 bool ABaseUnitCharacter::EnterBuilding(IEnterInterface* object)
@@ -104,21 +90,7 @@ bool ABaseUnitCharacter::EnterBuilding(IEnterInterface* object)
 
 void ABaseUnitCharacter::HealingUnit()
 {
-	static uint8 countHealth = 0;
-	if(countHealth < 5 && HealthUnit < MaxHealthUnit)
-	{
-		countHealth++;
-		HealthUnit += 5;
-		GetWorld()->GetTimerManager().SetTimer(TimerHealing, this, &ABaseUnitCharacter::HealingUnit,  1.f, true);
-
-		(HealthUnit > MaxHealthUnit) ? BaseUserWidget->HealingUnit(1) : BaseUserWidget->HealingUnit(HealthPercent());
-	}
-	else
-	{
-		countHealth = 0;
-		GetWorld()->GetTimerManager().ClearTimer(TimerHealing);
-		BaseUserWidget->SetActiveHealing(false);
-	}
+	
 }
 
 void ABaseUnitCharacter::VisibleDecalSet(bool value)
@@ -130,9 +102,6 @@ void ABaseUnitCharacter::VisibleDecalSet(bool value)
 }
 
 void ABaseUnitCharacter::SetVisibilityUnitWidget(ESlateVisibility Visibility)
-{
-	if(BaseUserWidget)
-		BaseUserWidget->SlateVisibility = Visibility;
-}
+{}
 
 

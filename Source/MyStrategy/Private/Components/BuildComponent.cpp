@@ -1,12 +1,10 @@
 #include "BuildComponent.h"
-#include "BuildingWidget.h"
 #include "BasePlayerController.h"
 #include "ManagerBuildingComponent.h"
 
 UBuildComponent::UBuildComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	BuildingWidget = CreateDefaultSubobject<UBuildingWidget>("Building Widget");
 }
 
 void UBuildComponent::BeginPlay()

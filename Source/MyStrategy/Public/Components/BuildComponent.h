@@ -34,12 +34,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building Mesh")
 	TArray<TSubclassOf<AObjectForBuilding>> ObjectForBuilding;
 
-	UFUNCTION(BlueprintCallable)
-	UBuildingWidget* GetBuildingWidget() {return BuildingWidget;};
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Building")
-	UBuildingWidget* BuildingWidget;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Data Table")
 	FDataTableRowHandle ObjectDataHandle;
 

@@ -15,7 +15,7 @@ public class MyStrategy : ModuleRules
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 		
-		PrivateIncludePaths.AddRange(new string[] {"MyStrategy/Public/Player","MyStrategy/Public/Widget", "MyStrategy/Public/Components", "MyStrategy/Public/Building", "MyStrategy/Public/Units"});
+		PrivateIncludePaths.AddRange(new string[] {"MyStrategy/Public/Player","MyStrategy/Public/Widget", "MyStrategy/Public/Components", "MyStrategy/Public/Building", "MyStrategy/Public/Units","MyStrategy/Public/UI"});
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
