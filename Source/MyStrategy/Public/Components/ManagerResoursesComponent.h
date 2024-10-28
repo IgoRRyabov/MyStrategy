@@ -6,29 +6,34 @@
 #include "ManagerResoursesComponent.generated.h"
 
 struct FResourse;
+class ABaseHUD;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateUpdateResourse, ETypeResourse, TRes, int, count);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MYSTRATEGY_API UManagerResoursesComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+
+	FDelegateUpdateResourse DelegateUpdateResourse;
+	
 	UManagerResoursesComponent();
+	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetResouse(ETypeResourse TRes, float value)
-	{
-		*PlayerResourse.Find(TRes) += FMath::Max(0, value);
-		UE_LOG(LogTemp, Log, TEXT("CountResSet : %d"), TRes);
-		UE_LOG(LogTemp, Log, TEXT("CountResSet : %d"), *PlayerResourse.Find(TRes));
-	}
+	UFUNCTION()
+	void SetResouse(ETypeResourse TRes, float value);
+	
 	float GetGold() const {return CountGold;}
 	
 	UFUNCTION()
 	void UpdateResourse(ETypeResourse TRes, float value);
 	UFUNCTION()
-	bool GetResourse(TMap<ETypeResourse, int> PRes);
-	
+	bool GetResourse(TMap<ETypeResourse, int> PRes) const;
+
+	ABaseHUD* MainHUD;
 protected:
 	virtual void BeginPlay() override;
 

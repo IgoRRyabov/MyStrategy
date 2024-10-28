@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MainDisplayWidget.h"
+#include "ManagerResoursesComponent.h"
 #include "GameFramework/HUD.h"
 #include "BaseHUD.generated.h"
 
@@ -15,5 +17,9 @@ class MYSTRATEGY_API ABaseHUD : public AHUD
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget Reference")
-	UUserWidget* MainDisplayWidget;
+	UMainDisplayWidget* MainDisplayWidget;
+
+	void SetResourseComponent(UManagerResoursesComponent* MComponent);
+
+	UManagerResoursesComponent* ManagerResoursesComponent;
 };

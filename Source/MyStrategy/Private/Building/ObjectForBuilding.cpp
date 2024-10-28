@@ -15,17 +15,17 @@ AObjectForBuilding::AObjectForBuilding()
 	BoxComponent->SetupAttachment(StaticMeshComponent);
 }
 
-void AObjectForBuilding::BiuldingFinish()
+void AObjectForBuilding::BuildingFinish()
 {
 	isBuildingBuild = true;
 	for (TTuple<ETypeResourse, int> ForBuilding : ResourseForBuilding)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Count Resource For Building: %d"), ForBuilding.Value);
 	}
-
 	ResourceExtraction();
 }
 
+/// Обновление ресурсов на внутреннем складе здания
 void AObjectForBuilding::UpdateWarehouse(ETypeResourse & resType, int & resCount)
 {
 	if (!GetFreeSpace()) return;
@@ -69,13 +69,15 @@ void AObjectForBuilding::UpdateWarehouse(ETypeResourse & resType, int & resCount
 		}
 	}
 	
+	//Test
+	//OnUpdateResouse.Broadcast(ETypeResourse::Wood, 75);
+	
 	UE_LOG(LogTemp, Log, TEXT("!!! Warehouse count  ==  : %d !!!"), *Warehouse.Find(resType));
 	UE_LOG(LogTemp, Log, TEXT("Count all res in build ==  : %d"), countResources);
 	if (FreeSpace)
 	{
 		ResourceExtraction();
 	}
-	
 }
 
 void AObjectForBuilding::BeginPlay()
@@ -94,7 +96,6 @@ void AObjectForBuilding::BeginPlay()
 		FreeSpace = true;
 		UE_LOG(LogTemp, Log, TEXT("Count resources %d <= maxCountResource %d"), countResources, maxCountResource);
 	}
-	
 }
 
 void AObjectForBuilding::StartAddResource()
@@ -102,6 +103,16 @@ void AObjectForBuilding::StartAddResource()
 	auto resType = ExtractionResource;
 	auto res = countExtractionResource;
 	AddResource(resType, res);
+}
+
+void AObjectForBuilding::printNameUnitsInBuild()
+{
+	if (UnitsInBuiding.IsEmpty()) return;
+
+	for (TTuple<int, ABaseUnitCharacter*> InBuilding : UnitsInBuiding)
+	{
+		UE_LOG(LogTemp, Log, TEXT("______Unit in Build! %s"), *InBuilding.Value->GetName());
+	}
 }
 
 void AObjectForBuilding::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -159,6 +170,8 @@ bool AObjectForBuilding::AddUnits(AActor* unit)
 			}
 			CanExtractResource = true;
 			ResourceExtraction();
+			
+			printNameUnitsInBuild();
 			return true;
 		}
 	}
@@ -181,6 +194,7 @@ void AObjectForBuilding::MinusUnits(AActor* unit)
 			CanExtractResource = false;
 		}
 	}
+	printNameUnitsInBuild();
 }
 
 void AObjectForBuilding::SetActive()

@@ -4,7 +4,7 @@
 
 ABaseHUD::ABaseHUD()
 {
-	MainDisplayWidget = CreateDefaultSubobject<UUserWidget>("Main Display Widget");
+	MainDisplayWidget = CreateDefaultSubobject<UMainDisplayWidget>("Main Display Widget");
 }
 
 void ABaseHUD::BeginPlay()
@@ -12,6 +12,12 @@ void ABaseHUD::BeginPlay()
 	Super::BeginPlay();
 	check(MainDisplayWidget);
 	
-	CreateWidget(MainDisplayWidget);
-	MainDisplayWidget->AddToViewport();
+	// CreateWidget(MainDisplayWidget);
+	// MainDisplayWidget->AddToViewport();
+}
+
+void ABaseHUD::SetResourseComponent(UManagerResoursesComponent* MComponent)
+{
+	ManagerResoursesComponent = MComponent;
+	ManagerResoursesComponent->DelegateUpdateResourse.AddDynamic(MainDisplayWidget, &UMainDisplayWidget::UpdateRes);
 }

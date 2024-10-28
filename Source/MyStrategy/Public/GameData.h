@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "BaseUnitCharacter.h"
+#include "BuildWidget.h"
+#include "ButtonBuildingWidget.h"
 #include "GameData.generated.h"
 
 
@@ -56,11 +58,16 @@ struct FBuildingObjectData : public FTableRowBase
 	UTexture2D* IconBuild;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UImage* Image;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName NameBuilding;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<ETypeResourse, int> ResourseForBuilding;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UBuildWidget> BuildWidget;
 };
 
 inline extern bool LeftMouseClick = false;;

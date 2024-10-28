@@ -66,7 +66,8 @@ void UBuildComponent::EndBuilding()
 	
 	ObjectBuilding->SetDefaultCollision();
 	PlayerController->GetManagerBuildingComponent()->UpdateCountBuild(ObjectBuilding->GetTypeBuilding());
-	ObjectBuilding->BiuldingFinish();
+	ObjectBuilding->OnUpdateResouse.AddDynamic(PlayerController->GetManagerResoursesComponent(), &UManagerResoursesComponent::SetResouse);
+	ObjectBuilding->BuildingFinish();
 	ObjectBuilding = nullptr;
 	isBuild = false;
 }

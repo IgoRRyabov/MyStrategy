@@ -77,7 +77,7 @@ public:
 		BoxComponent->SetCollisionProfileName(nameCollision);};
 	void SetDefaultCollision() const{StaticMeshComponent->SetCollisionProfileName("BlockAll");
 		BoxComponent->SetCollisionProfileName("OverlapAll");};
-	void BiuldingFinish();
+	void BuildingFinish();
 
 	void UpdateWarehouse(ETypeResourse & resType, int & resCount);
 	/// Проверка пустого места в здании
@@ -145,5 +145,8 @@ protected:
 	bool FreeSpace = true;
 
 	void StartAddResource();
+
+	///Debug
+	void printNameUnitsInBuild();
 };
 
